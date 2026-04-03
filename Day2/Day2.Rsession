@@ -1,12 +1,4 @@
-]0;Day1~/Classes/Davis/STA141B_Spring26/Day1> cd ../Day2
-]0;Day2~/Classes/Davis/STA141B_Spring26/Day2> ls
-KeyIdeas.md  KeyIdeas.md~  Outline.md  Outline.md~
-]0;Day2~/Classes/Davis/STA141B_Spring26/Day2> cd ..
-]0;STA141B_Spring26~/Classes/Davis/STA141B_Spring26> cd Public/Day2
-]0;Day2~/Classes/Davis/STA141B_Spring26/Public/Day2> ls
-'#mine.Rsession#'   Approach.md~   README.md~       explore.R    mine.Rsession
- Approach.md        README.md      cloudhigh1.txt   explore.R~
-]0;Day2~/Classes/Davis/STA141B_Spring26/Public/Day2> R
+~/Classes/Davis/STA141B_Spring26/Public/Day2> R
 
 R Under development (unstable) (2025-03-26 r88055) -- "Unsuffered Consequences"
 Copyright (C) 2025 The R Foundation for Statistical Computing
