@@ -6,4 +6,6 @@
 
 + [Thinking through the approach](Plan.md)
 
++ [exploring if TIME line is number 5 in each file](explore1.R)
+
 + [R session](Day2.Rsession)
