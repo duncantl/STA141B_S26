@@ -8,4 +8,6 @@
 
 + [exploring if TIME line is number 5 in each file](explore1.R)
 
++ [funs.R](funs.R) - start of writing functions to read a file.
+
 + [R session](Day2.Rsession)
