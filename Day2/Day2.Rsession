@@ -1,0 +1,112 @@
+]0;Day1~/Classes/Davis/STA141B_Spring26/Day1> cd ../Day2
+]0;Day2~/Classes/Davis/STA141B_Spring26/Day2> ls
+KeyIdeas.md  KeyIdeas.md~  Outline.md  Outline.md~
+]0;Day2~/Classes/Davis/STA141B_Spring26/Day2> cd ..
+]0;STA141B_Spring26~/Classes/Davis/STA141B_Spring26> cd Public/Day2
+]0;Day2~/Classes/Davis/STA141B_Spring26/Public/Day2> ls
+'#mine.Rsession#'   Approach.md~   README.md~       explore.R    mine.Rsession
+ Approach.md        README.md      cloudhigh1.txt   explore.R~
+]0;Day2~/Classes/Davis/STA141B_Spring26/Public/Day2> R
+
+R Under development (unstable) (2025-03-26 r88055) -- "Unsuffered Consequences"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: aarch64-apple-darwin23.6.0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+PID = 98278 
+Time = 2026-04-02 10:31:25 
+Dir = /Users/duncan/Classes/Davis/STA141B_Spring26/Public/Day2 
+1> dir = "~/Data/NASA"
+[28:16] 2> ff = list.files(dir, pattern = "txt")
+[28:35] 3> ff = list.files(dir, pattern = "txt", full = TRUE)
+[29:38] 4> class(ff)
+[1] "character"
+[29:54] 5> length(ff)
+[1] 0
+[30:18] 6> dir = "~/Data/NASAWeather"
+[31:02] 7> ff = list.files(dir, pattern = "txt", full = TRUE)
+[31:04] 8> length(ff)
+[1] 504
+[31:07] 9> ff[1]
+[1] "/Users/duncan/Data/NASAWeather/cloudhigh1.txt"
+[31:42] 10> ll = lapply(ff, readLines)
+[33:35] 11> names(ll) = ff
+[33:55] 12> class(ll)
+[1] "list"
+[34:00] 13> length(ll)
+[1] 504
+[34:06] 14> table(sapply(ll, class))
+
+character 
+      504 
+[34:36] 15> table(sapply(ll, length))
+
+ 31 
+504 
+[34:42] 16> head(sapply(ll, `[`, 5))
+ /Users/duncan/Data/NASAWeather/cloudhigh1.txt /Users/duncan/Data/NASAWeather/cloudhigh10.txt /Users/duncan/Data/NASAWeather/cloudhigh11.txt /Users/duncan/Data/NASAWeather/cloudhigh12.txt 
+   "             TIME     : 16-JAN-1995 00:00"    "             TIME     : 16-OCT-1995 00:00"    "             TIME     : 16-NOV-1995 00:00"    "             TIME     : 16-DEC-1995 00:00" 
+/Users/duncan/Data/NASAWeather/cloudhigh13.txt /Users/duncan/Data/NASAWeather/cloudhigh14.txt 
+   "             TIME     : 16-JAN-1996 00:00"    "             TIME     : 16-FEB-1996 00:00" 
+[35:35] 17> table(grepl("TIME", sapply(ll, `[`, 5))))
+Error: unexpected ')' in "table(grepl("TIME", sapply(ll, `[`, 5))))"
+No suitable frames for recover()
+[35:35] 17> table(grepl("TIME", sapply(ll, `[`, 5)))
+
+TRUE 
+ 504 
+[36:51] 18> ll[[1]][5]
+[1] "             TIME     : 16-JAN-1995 00:00"
+[37:30] 19> tm = ll[[1]][5]
+[37:34] 20> strsplit(tm, " ")[[1]]
+ [1] ""            ""            ""            ""            ""            ""            ""            ""            ""            ""            ""            ""            ""            "TIME"        ""           
+[16] ""            ""            ""            ":"           "16-JAN-1995" "00:00"      
+[42:48] 21> strsplit(tm, " :")[[1]]
+[1] "             TIME    " " 16-JAN-1995 00:00"   
+[43:31] 22> strsplit(tm, " :")[[1]][2]
+[1] " 16-JAN-1995 00:00"
+[44:30] 23> strsplit(strsplit(tm, " :")[[1]][2], " ")[[1]]
+[1] ""            "16-JAN-1995" "00:00"      
+[44:37] 24> tmp = strsplit(tm, " :")[[1]][2]
+[44:54] 25> tmp
+[1] " 16-JAN-1995 00:00"
+[44:55] 26> strptime(tmp, "%d-%B-%Y %H:%M")
+[1] "1995-01-16 PST"
+[45:36] 27> as.Date(strptime(tmp, "%d-%B-%Y %H:%M"))s
+[1] "1995-01-16"
+[46:01] 28> source("funs.R")
+[47:12] 29> getTime(lines[[1]])
+Error in lines[[1]] : object of type 'closure' is not subsettable
+
+Enter a frame number, or 0 to exit   
+
+1: getTime(lines[[1]])
+2: funs.R#4: strsplit(ll[5], " :")
+
+Selection: 0
+[47:12] 29> getTime(ll[[1]])
+[1] "1995-01-16"
+[48:29] 30> getTime(ll[[2]])
+[1] "1995-10-16"
+[48:36] 31> ll[[2]][5]
+[1] "             TIME     : 16-OCT-1995 00:00"
+[49:09] 32> dt = sapply(ll,  getTime)
+[49:22] 33> summary(dt)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   9146    9686   10226   10226   10766   11307 
+[49:26] 34> class(dt)
+[1] "numeric"
+[49:37] 35> 
