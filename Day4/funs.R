@@ -31,10 +31,10 @@ function(x)
 
 
 readFile = 
-function(filename)
+function(filename, na.strings = "....")
 {
    lines = readLines(filename)
-   tb = read.table(textConnection(lines[-(1:7)]))
+   tb = read.table(textConnection(lines[-(1:7)]), na.strings = na.strings)
    
    ans = data.frame(values = unlist( tb[, -(1:3) ]) )
    long = getLongitudes(lines[6])

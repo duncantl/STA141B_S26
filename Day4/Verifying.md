@@ -21,11 +21,16 @@ Here it is helpful if we had the file name for each row.
 We could have added that in `readFile()`.
 However, we can find which files these correspond to by matching the date:
 ```
+ff = list.files("NASAWeather", full.names = TRUE)
+lines = lapply(ff, readLines)
+names(lines) = ff
 dt = structure(sapply(lines, getTime), class = "Date")
 j = match(xx$date[i], dt)
 names(lines)[j]
 ```
 So we have the file index/number (e.g., 16) for each variable
+and we can look through each of these files and check the date
+and the value for the latitude, longitude pair.
 
 
 
@@ -35,7 +40,7 @@ summary(xx)
 ```
 
 cloudlow is the only variable with NAs.
-How would we check this is correct?
+How would we check these are correct?
 
 Let's look in the text for each file (`lines`) for the literal string `....`
 ```
