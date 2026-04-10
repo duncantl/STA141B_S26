@@ -26,3 +26,6 @@ xx = combineVars(vars)
 
 + [Verifying the results](Verifying.md)
 
+
+
++ [Note on preallocation/concatenation](concat.R)
