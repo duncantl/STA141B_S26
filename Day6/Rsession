@@ -1,0 +1,151 @@
+]0;Day6~/sta141b/Public/Day6> R
+
+R Under development (unstable) (2025-03-26 r88055) -- "Unsuffered Consequences"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: aarch64-apple-darwin23.6.0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+PID = 89609 
+Time = 2026-04-16 10:29:26 
+Dir = /Users/duncan/Classes/Davis/STA141B_Spring26/Public/Day6 
+1> ll = readLines("../../Data/eeyore.log")
+[30:00] 2> length(ll)
+[1] 8548
+[30:03] 3> class(ll)
+[1] "character"
+[30:06] 4> i = "123.45.67.102"
+[10:51] 5> rx = "\\.([0-9]|[0-9][0-9]|[0-9][0-9][0-9])$"
+[11:20] 6> rx
+[1] "\\.([0-9]|[0-9][0-9]|[0-9][0-9][0-9])$"
+[11:21] 7> rx0 = "\\.([0-9]|[0-9][0-9]|[0-9][0-9][0-9]$"
+[11:31] 8> grepl(rx0, i)
+Error in grepl(rx0, i) : 
+  invalid regular expression '\.([0-9]|[0-9][0-9]|[0-9][0-9][0-9]$', reason 'Missing ')''
+In addition: Warning message:
+In grepl(rx0, i) : TRE pattern compilation error 'Missing ')''
+
+Enter a frame number, or 0 to exit   
+
+1: grepl(rx0, i)
+
+Selection: 0
+[11:31] 8> grepl(rx, i)
+[1] TRUE
+[12:30] 9> gregexpr(rx, i)
+[[1]]
+[1] 10
+attr(,"match.length")
+[1] 4
+attr(,"index.type")
+[1] "chars"
+attr(,"useBytes")
+[1] TRUE
+
+[12:41] 10> i
+[1] "123.45.67.102"
+[13:22] 11> gsub(rx, "", i)
+[1] "123.45.67"
+[13:24] 12> i = c("123.45.67.102", "123.45.67.10", "123.45.67.1", "123.45.67.")
+[13:59] 13> gsub(rx, "", i)
+[1] "123.45.67"  "123.45.67"  "123.45.67"  "123.45.67."
+[14:25] 14> rx
+[1] "\\.([0-9]|[0-9][0-9]|[0-9][0-9][0-9])$"
+[14:47] 15> rx2  = "\\.[0-9]{1,3}$"
+[15:24] 16> gsub(rx2, "", i)
+[1] "123.45.67"  "123.45.67"  "123.45.67"  "123.45.67."
+[15:44] 17> 
+[15:44] 17> 
+[15:44] 17> grepl( "\\.[0-9]{1,3}$?", i[1])
+[1] TRUE
+[21:43] 18> gregexpr( "\\.[0-9]{1,3}$?", i[1])
+[[1]]
+[1] 10
+attr(,"match.length")
+[1] 4
+attr(,"index.type")
+[1] "chars"
+attr(,"useBytes")
+[1] TRUE
+
+[22:01] 19> gregexpr( "\\.[0-9]{1,3}$?", i[1], perl = TRUE)
+Error in gregexpr("\\.[0-9]{1,3}$?", i[1], perl = TRUE) : 
+  invalid regular expression '\.[0-9]{1,3}$?'
+In addition: Warning message:
+In gregexpr("\\.[0-9]{1,3}$?", i[1], perl = TRUE) :
+  PCRE pattern compilation error
+	'quantifier does not follow a repeatable item'
+	at '?'
+
+Enter a frame number, or 0 to exit   
+
+1: gregexpr("\\.[0-9]{1,3}$?", i[1], perl = TRUE)
+
+Selection: 0
+[22:01] 19> rx3  = "([a-z]+) \\1"
+[31:04] 20> grep(rx3, "and the the dog")
+[1] 1
+[31:15] 21> gregexpr(rx3, "and the the dog")
+[[1]]
+[1] 5
+attr(,"match.length")
+[1] 7
+attr(,"index.type")
+[1] "chars"
+attr(,"useBytes")
+[1] TRUE
+
+[32:29] 22> gregexpr(rx3, "and the the dog is a a cat")
+[[1]]
+[1]  5 20
+attr(,"match.length")
+[1] 7 3
+attr(,"index.type")
+[1] "chars"
+attr(,"useBytes")
+[1] TRUE
+
+[34:56] 23> ll[1]
+[1] "114.188.183.88 - - [01/Nov/2015:03:41:50 -0800] \"GET /stat141/Code/Session1.txt HTTP/1.1\" 404 223 \"https://www.google.co.jp/\" \"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36\""
+[35:27] 24> gregexpr(rx3, "and tthe the dog is a a cat")
+[[1]]
+[1]  6 21
+attr(,"match.length")
+[1] 7 3
+attr(,"index.type")
+[1] "chars"
+attr(,"useBytes")
+[1] TRUE
+
+[35:54] 25> rx = "^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}"
+[44:18] 26> rx2 = "^([0-9]{1,3}\\.){4}"
+[44:34] 27> i
+[1] "123.45.67.102" "123.45.67.10"  "123.45.67.1"   "123.45.67."   
+[44:36] 28> grepl(rx2, i)
+[1] FALSE FALSE FALSE FALSE
+[44:45] 29> rx2 = "^([0-9]{1,3}\\.?){4}"
+[46:16] 30> grepl(rx2, i)
+[1] TRUE TRUE TRUE TRUE
+[46:19] 31> 
+[46:19] 31> table(grepl(rx2, ll))
+
+TRUE 
+8548 
+[46:56] 32> z = gsub("^(([0-9]{1,3}\\.?){4}).*", "\\1", ll)
+[47:41] 33> head(z)
+[1] "114.188.183.88" "114.188.183.88" "114.188.183.88" "114.188.183.88" "114.188.183.88" "114.188.183.88"
+[47:43] 34> ll[1]
+[1] "114.188.183.88 - - [01/Nov/2015:03:41:50 -0800] \"GET /stat141/Code/Session1.txt HTTP/1.1\" 404 223 \"https://www.google.co.jp/\" \"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36\""
+[49:11] 35> 
