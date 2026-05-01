@@ -1,0 +1,232 @@
+]0;Day10~/sta141b/Public/Day10> sqlite3 ../../Data/stats.stackexchange.db 
+-- Loading resources from /Users/duncan/.sqliterc
+SQLite version 3.41.2 2023-03-22 11:56:21
+Enter ".help" for usage hints.
+sqlite> .tables
+BadgeClassMap      LinkTypeMap        PostTypeIdMap      VoteTypeMap      
+Badges             PostHistory        Posts              Votes            
+CloseReasonMap     PostHistoryTypeId  TagPosts         
+Comments           PostLinks          Users            
+sqlite> .schema Posts
+CREATE TABLE Posts(
+  Id INTEGER PRIMARY KEY,
+  PostTypeId INTEGER,
+  AcceptedAnswerId INTEGER DEFAULT NULL,
+  CreationDate TEXT,
+  Score INTEGER,
+  ViewCount INTEGER DEFAULT NULL,
+  Body TEXT,
+  OwnerUserId INTEGER,
+  LastActivityDate TEXT,
+  Title TEXT,
+  Tags TEXT,
+  AnswerCount INTEGER DEFAULT NULL,
+  CommentCount INTEGER DEFAULT NULL,
+  ContentLicense TEXT,
+  LastEditorDisplayName TEXT,
+  LastEditDate TEXT,
+  LastEditorUserId INTEGER DEFAULT NULL,
+  CommunityOwnedDate TEXT,
+  ParentId  INTEGER DEFAULT NULL,
+  OwnerDisplayName TEXT,
+  ClosedDate  TEXT,
+  FavoriteCount INTEGER DEFAULT NULL  
+);
+sqlite> .schema Comments
+CREATE TABLE Comments(
+  Id INTEGER PRIMARY KEY,
+  PostId INTEGER,
+  Score INTEGER,
+  Text TEXT,
+  CreationDate TEXT,
+  UserId INTEGER DEFAULT NULL,
+  ContentLicense TEXT,
+  UserDisplayName TEXT
+);
+sqlite> SELECT PostTypeId, COUNT(PostTypeId) FROM Posts GROUP BY PostTypeId;
+PostTypeId  COUNT(PostTypeId)
+----------  -----------------
+1           204370           
+2           197928           
+3           6                
+4           1444             
+5           1444             
+6           23               
+7           5                
+sqlite> .tables
+BadgeClassMap      LinkTypeMap        PostTypeIdMap      VoteTypeMap      
+Badges             PostHistory        Posts              Votes            
+CloseReasonMap     PostHistoryTypeId  TagPosts         
+Comments           PostLinks          Users            
+sqlite> SELECT COUNT(*) FROM PostTypeIdMap;
+COUNT(*)
+--------
+8       
+sqlite> SELECT * FROM PostTypeIdMap;
+id  value                                                       
+--  ------------------------------------------------------------
+1   Question                                                    
+2   Answer                                                      
+3   Orphaned tag wiki                                           
+4   Tag wiki excerpt                                            
+5   Tag wiki                                                    
+6   Moderator nomination                                        
+7   Wiki placeholder (seems to only be the election description)
+8   Privilege wiki                                              
+sqlite> 
+]0;Day10~/sta141b/Public/Day10> sqlite3 ../Day9/cookies3.sqlite 
+-- Loading resources from /Users/duncan/.sqliterc
+SQLite version 3.41.2 2023-03-22 11:56:21
+Enter ".help" for usage hints.
+sqlite> .tables
+moz_cookies
+sqlite> .schema moz_cookies
+CREATE TABLE moz_cookies (id INTEGER PRIMARY KEY, originAttributes TEXT NOT NULL DEFAULT '', name TEXT, value TEXT, host TEXT, path TEXT, expiry INTEGER, lastAccessed INTEGER, creationTime INTEGER, isSecure INTEGER, isHttpOnly INTEGER, inBrowserElement INTEGER DEFAULT 0, sameSite INTEGER DEFAULT 0, rawSameSite INTEGER DEFAULT 0, schemeMap INTEGER DEFAULT 0, CONSTRAINT moz_uniqueid UNIQUE (name, host, path, originAttributes));
+sqlite> SELECT COUNT(*) FROM moz_cookies;
+COUNT(*)
+--------
+567     
+sqlite> SELECT * FROM moz_cookies LIMIT 5;
+id      originAttributes                        name             value                                                     host               path  expiry      lastAccessed      creationTime      isSecure  isHttpOnly  inBrowserElement  sameSite  rawSameSite  schemeMap
+------  --------------------------------------  ---------------  --------------------------------------------------------  -----------------  ----  ----------  ----------------  ----------------  --------  ----------  ----------------  --------  -----------  ---------
+12022                                           blaize_session   f136b148-69e0-4504-9af2-5fe4599eeaaf                      .bbc.com           /     1685287274  1683136197978860  1673191275012787  0         0           0                 1         0            2        
+35044                                           nyt-auth-method  username                                                  .nytimes.com       /     1688761265  1683163523480315  1673209213266038  1         0           0                 1         0            2        
+179052  ^partitionKey=%28https%2Cgoogle.com%29  DEVICE_INFO      ChxOekU0TmpnMU1qUTFOekk1TnpNeE16WXdOUT09ELuo850GGLuo850G  .youtube.com       /     1688871483  1683160643911662  1673319483934805  1         1           0                 0         0            2        
+323492  ^partitionKey=%28https%2Camazon.com%29  ndat             Ss/5V2O+D340/SvefjH1Ag==                                  .ninthdecimal.com  /     1688952190  1683157831004318  1673400190565656  1         0           0                 0         0            2        
+683855                                          DEVICE_INFO      ChxOekU0T0RNNU16ZzBPREV3TlRneE1qTXhPUT09EJ6ciZ4GGJ6ciZ4G  .youtube.com       /     1689230366  1683124078518961  1673678366911382  1         1           0                 0         0            2        
+sqlite> .schema moz_cookies
+CREATE TABLE moz_cookies (id INTEGER PRIMARY KEY, originAttributes TEXT NOT NULL DEFAULT '', name TEXT, value TEXT, host TEXT, path TEXT, expiry INTEGER, lastAccessed INTEGER, creationTime INTEGER, isSecure INTEGER, isHttpOnly INTEGER, inBrowserElement INTEGER DEFAULT 0, sameSite INTEGER DEFAULT 0, rawSameSite INTEGER DEFAULT 0, schemeMap INTEGER DEFAULT 0, CONSTRAINT moz_uniqueid UNIQUE (name, host, path, originAttributes));
+sqlite> SELECT id, host, path, expiry, creationTime * FROM moz_cookies LIMIT 5;
+Parse error: near "FROM": syntax error
+  SELECT id, host, path, expiry, creationTime * FROM moz_cookies LIMIT 5;
+                                  error here ---^
+sqlite> SELECT id, host, path, expiry, creationTime FROM moz_cookies LIMIT 5;
+id      host               path  expiry      creationTime    
+------  -----------------  ----  ----------  ----------------
+12022   .bbc.com           /     1685287274  1673191275012787
+35044   .nytimes.com       /     1688761265  1673209213266038
+179052  .youtube.com       /     1688871483  1673319483934805
+323492  .ninthdecimal.com  /     1688952190  1673400190565656
+683855  .youtube.com       /     1689230366  1673678366911382
+sqlite> SELECT id, host, path, expiry, creationTime FROM moz_cookies WHERE host = ".bbc.com";
+id     host      path  expiry      creationTime    
+-----  --------  ----  ----------  ----------------
+12022  .bbc.com  /     1685287274  1673191275012787
+sqlite> SELECT COUNT(host) FROM moz_cookies GROUP BY host ;
+*** output flushed ***
+sqlite> SELECT host, COUNT(host) FROM moz_cookies GROUP BY host ;
+*** output flushed ***
+sqlite> SELECT COUNT(host) FROM moz_cookies GROUP BY host ;
+*** output flushed ***
+sqlite> SELECT COUNT(host) FROM moz_cookies;
+COUNT(host)
+-----------
+567        
+sqlite> SELECT COUNT(DISTINCT host) FROM moz_cookies;
+COUNT(DISTINCT host)
+--------------------
+251                 
+sqlite> SELECT host, COUNT(host) FROM moz_cookies GROUP BY host ORDER BY host LIMIT 10;
+host                  COUNT(host)
+--------------------  -----------
+.4dex.io              3          
+.admanmedia.com       2          
+.adtelligent.com      3          
+.alibabacloud.com     3          
+.aliexpress.com       1          
+.aliyun.com           1          
+.amazon-adsystem.com  1          
+.amazon.com           1          
+.amzn.to              1          
+.aniview.com          1          
+sqlite> SELECT host, COUNT(host) FROM moz_cookies GROUP BY host ORDER BY host LIMIT 40;
+*** output flushed ***
+sqlite> SELECT host, COUNT(host) FROM moz_cookies GROUP BY host ORDER BY COUNT(host) LIMIT 40;
+host                      COUNT(host)
+------------------------  -----------
+.aliexpress.com           1          
+.aliyun.com               1          
+.amazon-adsystem.com      1          
+.amazon.com               1          
+.amzn.to                  1          
+.aniview.com              1          
+.app.box.com              1          
+.associates-amazon.com    1          
+.autodesk.com             1          
+.bankofamerica.com        1          
+.bbc.com                  1          
+.bhphotovideo.com         1          
+.carmax.com               1          
+.cheatography.com         1          
+.connectad.io             1          
+.console.adtarget.com.tr  1          
+.csync.loopme.me          1          
+.datacamp.com             1          
+.deliciousbrains.com      1          
+.et.nytimes.com           1          
+.finehomebuilding.com     1          
+.fivethirtyeight.com      1          
+.flowtype.press           1          
+.geeksforgeeks.org        1          
+.golf.com                 1          
+.gstatic.com              1          
+.hardieboysinc.com        1          
+.ibm.com                  1          
+.idmsa.apple.com          1          
+.ieee-dataport.org        1          
+.ieee.org                 1          
+.ip2location.com          1          
+.javatpoint.com           1          
+.loggly.com               1          
+.netsurion.com            1          
+.oreilly.com              1          
+.poshmark.com             1          
+.practical365.com         1          
+.prebid.a-mo.net          1          
+.primis.tech              1          
+sqlite> SELECT host, COUNT(host) FROM moz_cookies GROUP BY host ORDER BY COUNT(host) DESC LIMIT 40;
+*** output flushed ***
+sqlite> SELECT host, COUNT(host) AS num FROM moz_cookies GROUP BY host ORDER BY num DESC LIMIT 40;
+host                       num
+-------------------------  ---
+.washingtonpost.com        19 
+.docs.google.com           14 
+.pcworld.com               10 
+.nytimes.com               10 
+.macworld.com              10 
+sp.nba.com                 8  
+exchange.mediavine.com     8  
+.linkedin.com              8  
+www.google.com             7  
+.brentozar.com             7  
+.sidetrak.com              6  
+.elastic.co                6  
+.cbssports.com             6  
+www.realtor.com            5  
+www.macworld.com           5  
+www.brentozar.com          5  
+satechi.net                5  
+piazza.com                 5  
+mail.google.com            5  
+.ugreen.com                5  
+.sonicwall.com             5  
+.irishtimes.com            5  
+.google.com                5  
+.cdw.com                   5  
+.bestbuy.com               5  
+www.pcworld.com            4  
+www.goodhousekeeping.com   4  
+www.beyondtrust.com        4  
+natashaskitchen.com        4  
+meta.wikimedia.org         4  
+login.wikimedia.org        4  
+en.wiktionary.org          4  
+elb.the-ozone-project.com  4  
+.youtube.com               4  
+.wsj.com                   4  
+.satechi.net               4  
+.peacocktv.com             4  
+.opensource.com            4  
+.intuit.com                4  
+www.wikidata.org           3  
+sqlite> 
