@@ -10,4 +10,4 @@
 
 + [SQLite session](sqlite.session)
 
-+ [R functions for working with a database](db.R)
+
