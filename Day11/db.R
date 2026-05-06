@@ -23,6 +23,11 @@ if(FALSE) {
 
 
     # execute a SQL query in the default database
+    q = "
+SELECT COUNT(*)
+FROM People
+"
+    sql(q)
     sql("SELECT COUNT(*) FROM People")
 
 
