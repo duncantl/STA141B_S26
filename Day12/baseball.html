@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Relational Databases</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+     
+      
+    <textarea id="source">
+
+class: center, middle
+
+# Baseball Examples for Relational Databases
+
+
+### Duncan Temple Lang
+
+<div style="clear: both"/>
+
+<!-- <hr width="50%"/> -->
+
+---
+# Baseball Database
+
++ [On canvas](https://canvas.ucdavis.edu/courses/1073084/files?preview=31100272)
+
++ Also
+  + [https://github.com/jknecht/baseball-archive-sqlite](https://github.com/jknecht/baseball-archive-sqlite)
+  + [R package](https://cran.r-project.org/web/packages/Lahman/)
+
+---
+# Schema
+
+<img src="../Day9/lahman-model.png"></img>
+
+      <!--
+	   Focusing on
+	   Teams
+	   People
+	   Salaries
+	   SeriesPost
+	 -->
+
+---
+
+
+```{r}
+db = dbConnect(SQLite(), "../../lahman_1871-2022.sqlite")
+dbListTables(db)
+```
+
+---
+# How many teams are there in the database? how many teams are there in 2022?
+
+<!-- 1 -->
+--
+
+```sqlite
+SELECT COUNT(DISTINCT teamID) 
+FROM Teams;
+```
+---
+
+# In 2022?
+
+--
+
+```sql
+SELECT COUNT(DISTINCT teamID) 
+FROM Teams
+WHERE yearID = 2022;
+```
+
+---
+# Organize results by league, division and number of wins with the team that has the most wins first in their division
+
+--
+```sql
+SELECT name, lgID, divID, W AS Wins, L AS Losses
+FROM Teams
+WHERE yearID = 2022
+ORDER BY lgID, divID ASC, Wins DESC;
+```
+
+---
+
+<!-- 2 -->
+# How many individuals are there from each country
+
+```sql
+SELECT  birthCountry AS country, COUNT(birthCountry) 
+FROM People 
+GROUP BY birthCountry;
+```
+
+Arrange them from most to least:
+
+```sql
+SELECT  birthCountry AS country, COUNT(birthCountry) AS num 
+FROM People 
+GROUP BY birthCountry 
+ORDER BY num DESC;
+```
+
+---
+<!-- 3 -->
+# Compute the payroll for each time in each year
+
++ Salaries table
+
+--
+
+```sql
+SELECT teamID,  SUM(salary) AS payroll, yearID, lgID
+FROM Salaries
+GROUP BY teamID, yearID;
+```
+
+---
+# Add the full name of the team
+
+--
+
+```sql
+SELECT S.teamID,  SUM(salary) AS payroll, S.yearID, S.lgID
+FROM Salaries AS S, Teams AS T
+WHERE T.teamId = S.teamId
+GROUP BY S.teamID, S.yearID;
+```
+
+--
++ Is this correct?
+
+--
++ 2 issues
+   + Ignores teams for which we have no salary information.
+      + Salary information starts in 1985.
+```sql
+SELECT MIN(yearID), MAX(yearID)
+FROM Salaries;
+```
+
+
+---
+# Nested query
+
++ LEFT JOIN
+
+```sql
+SELECT name, P.*
+FROM (SELECT teamID,  SUM(salary) AS payroll, yearID, lgID
+      FROM Salaries
+      GROUP BY teamID, yearID
+     ) AS P
+LEFT JOIN Teams AS T
+ON T.teamID = P.teamID;
+```
+
++ How many rows in this?  
+
+--
+  + 69981!!
+
+---
++ In R, let's look at the San Francisco Giants (SFN)
+```r
+d = sql(q)
+subset(d, teamID == "SFN")
+```
+--
+
++  Lots of repeats for the payroll.
+   + How many?
+   + Why?
+
+---
+# Correct?
+
+```sql
+SELECT name, P.*
+FROM (SELECT teamID,  SUM(salary) AS payroll, yearID, lgID
+      FROM Salaries
+      GROUP BY teamID, yearID
+     ) AS P
+LEFT JOIN Teams AS T
+ON T.teamID = P.teamID
+   AND
+   T.yearID = P.yearID;
+```
+
+---
+# Better?
+
+```sql
+SELECT name, S.teamID,  SUM(salary) AS payroll, S.yearID, S.lgID
+FROM Salaries AS S, Teams AS T
+WHERE T.teamId = S.teamId 
+      AND 
+      T.yearID = S.yearID
+GROUP BY S.teamID, S.yearID;
+```
+
+---
+# How to verify result?
+
++ Pick a few years and teams and check by explicitly subsetting the corresponding rows and summing.
+   + via SQL
+   + and R
+
++ Plot the results
+   + time series for each time
+     + year versus payroll
+
+   + What do we expect?
+
+```r
+ggplot(z, aes(x = yearID, y = payroll, colour = teamID, group = teamID)) +
+    geom_line()
+```
+
+---
+
+# Maximum in each year
+
+--
+
+```sql
+SELECT * FROM
+  (SELECT teamID,  SUM(salary) AS payroll, yearID, lgID
+   FROM Salaries
+   GROUP BY teamID, yearID
+  )
+GROUP BY yearID 
+HAVING payroll = MAX(payroll);
+```
+
++ But need the full team name, etc.
+
+---
+# Following is an error in the SQL
+
+```sql
+SELECT teamID,  SUM(salary) AS payroll, yearID, lgID
+FROM Salaries
+GROUP BY teamID, yearID
+HAVING payroll = MAX(payroll);
+```
+
+---
+# Compute the career salary for each player with the person's full name and start and end year they  played
+
+
++ Join Salaries and People tables
+
++ Not when they were a manager!
+
++ Leaving this to you.
+
+---
+<!-- 4 -->
+# Which team won the world series in 2022
+
++ We want their full name, not just the abbreviation (e.g., SFN)
+
+--
+
+```sql
+SELECT t.name, t.lgID, t.divID, t.W, t.L, s.losses
+FROM SeriesPost AS s,
+     Teams AS t
+WHERE s.round = 'WS'
+  AND s.teamIDwinner = t.teamID
+  AND s.yearID = 2022
+  AND t.yearID = 2022;
+```
+
+---
+<!-- 5 -->
+# Compute the winner and the loser of the world series for all years.
+  
++ Include the team name, league, division, number of games won and lost during the season
+   for both the winning and the losing team.
+
+--
+
+```sql
+SELECT s.yearID, 
+       w.name AS winningTeamName,
+       w.lgID AS winningLeague, 
+	   w.divID AS winningDivision,
+	   w.teamID AS winningTeamID, 
+	   w.W AS winningTeamWins, 
+	   w.L AS winningTeamLoses,
+       l.name AS winningTeamName,
+       l.lgID AS winningLeague, 
+	   l.divID AS winningDivision,
+	   l.teamID AS winningTeamID, 
+	   l.W AS winningTeamWins, 
+	   l.L AS winningTeamLoses
+FROM SeriesPost AS s,
+     Teams AS w,
+	 Teams AS l
+WHERE
+     s.round = 'WS'
+AND  s.teamIDwinner = w.teamID
+AND	 s.yearID = w.yearID
+AND	 s.teamIDloser = l.teamID
+AND	 s.yearID = l.yearID
+ORDER BY s.yearID DESC
+```
+
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script src="remark-toc/index.js">     </script>   
+    <script>
+     var slideshow = remark.create();
+//     var toc = require('remark-toc');
+//     slideshow.use(toc);
+    </script>
+  </body>
+</html>
