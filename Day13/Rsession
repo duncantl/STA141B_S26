@@ -1,0 +1,1321 @@
+]0;Day13~/sta141b/Public/Day13> R
+
+R Under development (unstable) (2025-03-26 r88055) -- "Unsuffered Consequences"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: aarch64-apple-darwin23.6.0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+PID = 15261 
+Time = 2026-05-12 10:30:29 
+Dir = /Users/duncan/Classes/Davis/STA141B_Spring26/Public/Day13 
+1> source("../Day11/db.R")
+[30:50] 2> db = connect(SQLite(), "../../Data/lahman_1871-2022.sqlite")
+Error in connect(SQLite(), "../../Data/lahman_1871-2022.sqlite") : 
+  unused argument ("../../Data/lahman_1871-2022.sqlite")
+No suitable frames for recover()
+[30:50] 2> db = connect("../../Data/lahman_1871-2022.sqlite")
+[31:14] 3> names(db)
+ [1] "AllstarFull"         "Appearances"         "AwardsManagers"      "AwardsPlayers"       "AwardsShareManagers"
+ [6] "AwardsSharePlayers"  "Batting"             "BattingPost"         "CollegePlaying"      "Fielding"           
+[11] "FieldingOF"          "FieldingOFsplit"     "FieldingPost"        "HallOfFame"          "HomeGames"          
+[16] "Managers"            "ManagersHalf"        "Parks"               "People"              "Pitching"           
+[21] "PitchingPost"        "Salaries"            "Schools"             "SeriesPost"          "Teams"              
+[26] "TeamsFranchises"     "TeamsHalf"          
+[31:16] 4> names(db$Salaries)
+[1] "yearID"   "teamID"   "lgID"     "playerID" "salary"  
+[40:43] 5> head(db$Salaries)
+  yearID teamID lgID  playerID salary
+1   1985    ATL   NL barkele01 870000
+2   1985    ATL   NL bedrost01 550000
+3   1985    ATL   NL benedbr01 545000
+4   1985    ATL   NL  campri01 633333
+5   1985    ATL   NL ceronri01 625000
+6   1985    ATL   NL chambch01 800000
+[41:03] 6> z = sql("SELECT yearID, teamID, SUM(salary) FROM Salaries GROUP BY teamID, yearID")
+[50:49] 7> dim(z)
+[1] 918   3
+[50:54] 8> head(z)
+  yearID teamID SUM(salary)
+1   1985    ATL    14807000
+2   1985    BAL    11560712
+3   1985    BOS    10897560
+4   1985    CAL    14427894
+5   1985    CHA     9846178
+6   1985    CHN    12702917
+[51:05] 9> tail(z)
+    yearID teamID SUM(salary)
+913   2016    SFN   172253778
+914   2016    SLN   143053500
+915   2016    TBA    57097310
+916   2016    TEX   176038723
+917   2016    TOR   138701700
+918   2016    WAS   141652646
+[51:30] 10> names(db$Teams)
+ [1] "yearID"         "lgID"           "teamID"         "franchID"       "divID"          "Rank"           "G"             
+ [8] "Ghome"          "W"              "L"              "DivWin"         "WCWin"          "LgWin"          "WSWin"         
+[15] "R"              "AB"             "H"              "2B"             "3B"             "HR"             "BB"            
+[22] "SO"             "SB"             "CS"             "HBP"            "SF"             "RA"             "ER"            
+[29] "ERA"            "CG"             "SHO"            "SV"             "IPouts"         "HA"             "HRA"           
+[36] "BBA"            "SOA"            "E"              "DP"             "FP"             "name"           "park"          
+[43] "attendance"     "BPF"            "PPF"            "teamIDBR"       "teamIDlahman45" "teamIDretro"   
+[52:46] 11> sql("SELECT teamID, name FROM Teams WHERE teamID = ATL")
+Error: no such column: ATL
+
+Enter a frame number, or 0 to exit   
+
+ 1: sql("SELECT teamID, name FROM Teams WHERE teamID = ATL")
+ 2: db.R#136: dbGetQuery(dbms, sql)
+ 3: dbGetQuery(dbms, sql)
+ 4: .local(conn, statement, ...)
+ 5: dbSendQuery(conn, statement, ...)
+ 6: dbSendQuery(conn, statement, ...)
+ 7: .local(conn, statement, ...)
+ 8: new("SQLiteResult", sql = statement, ptr = result_create(conn@ptr, statement), conn = conn, bigint = conn@bigint)
+ 9: initialize(value, ...)
+10: initialize(value, ...)
+11: result_create(conn@ptr, statement)
+
+Selection: 0
+[52:46] 11> sql("SELECT teamID, name FROM Teams WHERE teamID = 'ATL'")
+   teamID           name
+1     ATL Atlanta Braves
+2     ATL Atlanta Braves
+3     ATL Atlanta Braves
+4     ATL Atlanta Braves
+5     ATL Atlanta Braves
+6     ATL Atlanta Braves
+7     ATL Atlanta Braves
+8     ATL Atlanta Braves
+9     ATL Atlanta Braves
+10    ATL Atlanta Braves
+11    ATL Atlanta Braves
+12    ATL Atlanta Braves
+13    ATL Atlanta Braves
+14    ATL Atlanta Braves
+15    ATL Atlanta Braves
+16    ATL Atlanta Braves
+17    ATL Atlanta Braves
+18    ATL Atlanta Braves
+19    ATL Atlanta Braves
+20    ATL Atlanta Braves
+21    ATL Atlanta Braves
+22    ATL Atlanta Braves
+23    ATL Atlanta Braves
+24    ATL Atlanta Braves
+25    ATL Atlanta Braves
+26    ATL Atlanta Braves
+27    ATL Atlanta Braves
+28    ATL Atlanta Braves
+29    ATL Atlanta Braves
+30    ATL Atlanta Braves
+31    ATL Atlanta Braves
+32    ATL Atlanta Braves
+33    ATL Atlanta Braves
+34    ATL Atlanta Braves
+35    ATL Atlanta Braves
+36    ATL Atlanta Braves
+37    ATL Atlanta Braves
+38    ATL Atlanta Braves
+39    ATL Atlanta Braves
+40    ATL Atlanta Braves
+41    ATL Atlanta Braves
+42    ATL Atlanta Braves
+43    ATL Atlanta Braves
+44    ATL Atlanta Braves
+45    ATL Atlanta Braves
+46    ATL Atlanta Braves
+47    ATL Atlanta Braves
+48    ATL Atlanta Braves
+49    ATL Atlanta Braves
+50    ATL Atlanta Braves
+51    ATL Atlanta Braves
+52    ATL Atlanta Braves
+53    ATL Atlanta Braves
+54    ATL Atlanta Braves
+55    ATL Atlanta Braves
+56    ATL Atlanta Braves
+57    ATL Atlanta Braves
+[54:04] 12> z2 = sql("SELECT S.yearID, S.teamID, SUM(salary), name
+FROM Salaries AS S
+INNER JOIN Teams AS T
+ON  S.teamID = T.teamID
+GROUP BY teamID, yearID;")
++ + + + Error: ambiguous column name: teamID
+
+Enter a frame number, or 0 to exit   
+
+ 1: sql("SELECT S.yearID, S.teamID, SUM(salary), name\nFROM Salaries AS S\nINNER JOIN Teams AS T\nON  S.teamID = T.teamID\nGROUP 
+ 2: db.R#136: dbGetQuery(dbms, sql)
+ 3: dbGetQuery(dbms, sql)
+ 4: .local(conn, statement, ...)
+ 5: dbSendQuery(conn, statement, ...)
+ 6: dbSendQuery(conn, statement, ...)
+ 7: .local(conn, statement, ...)
+ 8: new("SQLiteResult", sql = statement, ptr = result_create(conn@ptr, statement), conn = conn, bigint = conn@bigint)
+ 9: initialize(value, ...)
+10: initialize(value, ...)
+11: result_create(conn@ptr, statement)
+
+Selection: 0
+[54:04] 12> z2  = sql("SELECT S.yearID, S.teamID, SUM(salary), name
+FROM Salaries AS S
+INNER JOIN Teams AS T
+ON  S.teamID = T.teamID
+GROUP BY S.teamID, S.yearID;
+")
++ + + + + [01:20] 13> dim(z2)
+[1] 918   4
+[01:26] 14> dim(z)
+[1] 918   3
+[01:55] 15> identical(z, z2)
+[1] FALSE
+[02:13] 16> identical(z, z2[,1:3])
+[1] FALSE
+[02:23] 17> names(z)
+[1] "yearID"      "teamID"      "SUM(salary)"
+[02:27] 18> names(z2)
+[1] "yearID"      "teamID"      "SUM(salary)" "name"       
+[02:30] 19> z[1,]
+  yearID teamID SUM(salary)
+1   1985    ATL    14807000
+[02:53] 20> z2[1,]
+  yearID teamID SUM(salary)           name
+1   1985    ATL   843999000 Atlanta Braves
+[02:55] 21> summary(z[[3]])
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+   880000  25435708  50537324  60042633  84416083 231978886 
+[04:27] 22> z[which.max(z[[3]]),]
+    yearID teamID SUM(salary)
+816   2013    NYA   231978886
+[04:54] 23> range(z[[1]])
+[1] 1985 2016
+[05:14] 24> z2[1,]
+  yearID teamID SUM(salary)           name
+1   1985    ATL   843999000 Atlanta Braves
+[05:29] 25> z3 = sql("SELECT S.yearID, S.teamID, SUM(salary), name
+FROM Salaries AS S
+INNER JOIN Teams AS T
+ON  S.teamID = T.teamID
+AND
+    S.yearID = S.yearID
+GROUP BY S.teamID, S.yearID;")
++ + + + + + [12:30] 26> dim(z3)
+[1] 918   4
+[12:32] 27> z3[,]
+    yearID teamID SUM(salary)                    name
+1     1985    ATL   843999000          Atlanta Braves
+2     1985    BAL   797689128       Baltimore Orioles
+3     1985    BOS  1329502320        Boston Americans
+4     1985    CAL   461692608       California Angels
+5     1985    CHA  1201233716       Chicago White Sox
+6     1985    CHN  1867328799 Chicago White Stockings
+7     1985    CIN  1111868961         Cincinnati Reds
+8     1985    CLE   799303252         Cleveland Blues
+9     1985    DET  1262473446          Detroit Tigers
+10    1985    HOU   609576111      Houston Colt .45's
+11    1985    KCA   503343666      Kansas City Royals
+12    1985    LAN   712914605     Los Angeles Dodgers
+13    1985    MIN   357418902         Minnesota Twins
+14    1985    ML4   315954996       Milwaukee Brewers
+15    1985    MON   340925976          Montreal Expos
+16    1985    NYA  1708584480    New York Highlanders
+17    1985    NYN   660920482           New York Mets
+18    1985    OAK   498223330       Oakland Athletics
+19    1985    PHI  1417495240    Philadelphia Quakers
+20    1985    PIT  1254940000    Pittsburg Alleghenys
+21    1985    SDN   595975482        San Diego Padres
+22    1985    SEA   212198000        Seattle Mariners
+23    1985    SFN   534411410    San Francisco Giants
+24    1985    SLN  1548037873        St. Louis Browns
+25    1985    TEX   391501500           Texas Rangers
+26    1985    TOR   405377300       Toronto Blue Jays
+27    1986    ATL   974858802          Atlanta Braves
+28    1986    BAL   897086802       Baltimore Orioles
+29    1986    BOS  1757073158        Boston Americans
+30    1986    CAL   461672256       California Angels
+31    1986    CHA  1271095918       Chicago White Sox
+32    1986    CHN  2529600255 Chicago White Stockings
+33    1986    CIN  1583549604         Cincinnati Reds
+34    1986    CLE   952759000         Cleveland Blues
+35    1986    DET  1504957108          Detroit Tigers
+36    1986    HOU   602269836      Houston Colt .45's
+37    1986    KCA   704359692      Kansas City Royals
+38    1986    LAN   969395440     Los Angeles Dodgers
+39    1986    MIN   542386354         Minnesota Twins
+40    1986    ML4   278421976       Milwaukee Brewers
+41    1986    MON   399729600          Montreal Expos
+42    1986    NYA  2219310360    New York Highlanders
+43    1986    NYN   939016554           New York Mets
+44    1986    OAK   537868155       Oakland Athletics
+45    1986    PHI  1622623240    Philadelphia Quakers
+46    1986    PIT  1474716000    Pittsburg Alleghenys
+47    1986    SDN   614557422        San Diego Padres
+48    1986    SEA   274082214        Seattle Mariners
+49    1986    SFN   581555000    San Francisco Giants
+50    1986    SLN  1293626310        St. Louis Browns
+51    1986    TEX   343899069           Texas Rangers
+52    1986    TOR   580108162       Toronto Blue Jays
+53    1987    ATL   943039920          Atlanta Braves
+54    1987    BAL   959118837       Baltimore Orioles
+55    1987    BOS  1237588374        Boston Americans
+56    1987    CAL   410991968       California Angels
+57    1987    CHA  1298304846       Chicago White Sox
+58    1987    CHN  2103275853 Chicago White Stockings
+59    1987    CIN  1234439500         Cincinnati Reds
+60    1987    CLE  1038677500         Cleveland Blues
+61    1987    DET  1478991482          Detroit Tigers
+62    1987    HOU   769110631      Houston Colt .45's
+63    1987    KCA   638715024      Kansas City Royals
+64    1987    LAN   888901195     Los Angeles Dodgers
+65    1987    MIN   396645000         Minnesota Twins
+66    1987    ML4   204210272       Milwaukee Brewers
+67    1987    MON   249913872          Montreal Expos
+68    1987    NYA  2051965680    New York Highlanders
+69    1987    NYN   844649554           New York Mets
+70    1987    OAK   642446145       Oakland Athletics
+71    1987    PHI  1611992620    Philadelphia Quakers
+72    1987    PIT  1040672000    Pittsburg Alleghenys
+73    1987    SDN   597552984        San Diego Padres
+74    1987    SEA   104121000        Seattle Mariners
+75    1987    SFN   473850000    San Francisco Giants
+76    1987    SLN  1540298000        St. Louis Browns
+77    1987    TEX    44880000           Texas Rangers
+78    1987    TOR   482057046       Toronto Blue Jays
+79    1988    ATL   725505918          Atlanta Braves
+80    1988    BAL   933713175       Baltimore Orioles
+81    1988    BOS  1695323224        Boston Americans
+82    1988    CAL   382316416       California Angels
+83    1988    CHA   779580000       Chicago White Sox
+84    1988    CHN  1928522106 Chicago White Stockings
+85    1988    CIN  1182158397         Cincinnati Reds
+86    1988    CLE  1090253000         Cleveland Blues
+87    1988    DET  1570087662          Detroit Tigers
+88    1988    HOU   749456187      Houston Colt .45's
+89    1988    KCA   786054348      Kansas City Royals
+90    1988    LAN  1095283475     Los Angeles Dodgers
+91    1988    MIN   772685292         Minnesota Twins
+92    1988    ML4   235256000       Milwaukee Brewers
+93    1988    MON   345719988          Montreal Expos
+94    1988    NYA  2332938240    New York Highlanders
+95    1988    NYN   931428154           New York Mets
+96    1988    OAK   532950000       Oakland Athletics
+97    1988    PHI  1937320000    Philadelphia Quakers
+98    1988    PIT   815796000    Pittsburg Alleghenys
+99    1988    SDN   516294108        San Diego Padres
+100   1988    SEA   337752700        Seattle Mariners
+101   1988    SFN   804700000    San Francisco Giants
+102   1988    SLN  1687280000        St. Louis Browns
+103   1988    TEX   272448681           Texas Rangers
+104   1988    TOR   563096350       Toronto Blue Jays
+105   1989    ATL   633403038          Atlanta Braves
+106   1989    BAL   570986523       Baltimore Orioles
+107   1989    BOS  2132773256        Boston Americans
+108   1989    CAL   483130656       California Angels
+109   1989    CHA   886380020       Chicago White Sox
+110   1989    CHN  1568196000 Chicago White Stockings
+111   1989    CIN  1472576000         Cincinnati Reds
+112   1989    CLE  1109529000         Cleveland Blues
+113   1989    DET  1847861288          Detroit Tigers
+114   1989    HOU   916799500      Houston Colt .45's
+115   1989    KCA  1008912672      Kansas City Royals
+116   1989    LAN  1369651530     Los Angeles Dodgers
+117   1989    MIN   962963292         Minnesota Twins
+118   1989    ML4   322924000       Milwaukee Brewers
+119   1989    MON   497066004          Montreal Expos
+120   1989    NYA  2053725000    New York Highlanders
+121   1989    NYN  1212989331           New York Mets
+122   1989    OAK   858718850       Oakland Athletics
+123   1989    PHI  1484560000    Philadelphia Quakers
+124   1989    PIT  1732300000    Pittsburg Alleghenys
+125   1989    SDN   766530000        San Diego Padres
+126   1989    SEA   449857000        Seattle Mariners
+127   1989    SFN   972584210    San Francisco Giants
+128   1989    SLN  2106327123        St. Louis Browns
+129   1989    TEX   606582831           Texas Rangers
+130   1989    TOR   748036636       Toronto Blue Jays
+131   1990    ATL   829663557          Atlanta Braves
+132   1990    BAL   667925796       Baltimore Orioles
+133   1990    BOS  2508116626        Boston Americans
+134   1990    CAL   695040000       California Angels
+135   1990    CHA  1157963000       Chicago White Sox
+136   1990    CHN  2002728000 Chicago White Stockings
+137   1990    CIN  1911210000         Cincinnati Reds
+138   1990    CLE  1767414000         Cleveland Blues
+139   1990    DET  2146375036          Detroit Tigers
+140   1990    HOU  1118130000      Houston Colt .45's
+141   1990    KCA  1261498536      Kansas City Royals
+142   1990    LAN  1385715760     Los Angeles Dodgers
+143   1990    MIN   905324000         Minnesota Twins
+144   1990    ML4   552136676       Milwaukee Brewers
+145   1990    MON   597109968          Montreal Expos
+146   1990    NYA  2509478160    New York Highlanders
+147   1990    NYN  1325092874           New York Mets
+148   1990    OAK  1093812555       Oakland Athletics
+149   1990    PHI  1844313380    Philadelphia Quakers
+150   1990    PIT  2115616000    Pittsburg Alleghenys
+151   1990    SDN   949770036        San Diego Padres
+152   1990    SEA   577468682        Seattle Mariners
+153   1990    SFN  1256796645    San Francisco Giants
+154   1990    SLN  2688556754        St. Louis Browns
+155   1990    TEX   758592972           Texas Rangers
+156   1990    TOR   816814364       Toronto Blue Jays
+157   1991    ATL  1048999500          Atlanta Braves
+158   1991    BAL  1208811000       Baltimore Orioles
+159   1991    BOS  4290435000        Boston Americans
+160   1991    CAL  1057920032       California Angels
+161   1991    CHA  2064199374       Chicago White Sox
+162   1991    CHN  3406823049 Chicago White Stockings
+163   1991    CIN  3498609289         Cincinnati Reds
+164   1991    CLE  2151470000         Cleveland Blues
+165   1991    DET  2908276626          Detroit Tigers
+166   1991    HOU   784002500      Houston Colt .45's
+167   1991    KCA  1421271036      Kansas City Royals
+168   1991    LAN  2131393160     Los Angeles Dodgers
+169   1991    MIN  1448433646         Minnesota Twins
+170   1991    ML4   647234000       Milwaukee Brewers
+171   1991    MON   386363988          Montreal Expos
+172   1991    NYA  3281300160    New York Highlanders
+173   1991    NYN  1987990061           New York Mets
+174   1991    OAK  2034954185       Oakland Athletics
+175   1991    PHI  3148226480    Philadelphia Quakers
+176   1991    PIT  3214314712    Pittsburg Alleghenys
+177   1991    SDN  1196100054        San Diego Padres
+178   1991    SEA   721824318        Seattle Mariners
+179   1991    SFN  2012898290    San Francisco Giants
+180   1991    SLN  2863660131        St. Louis Browns
+181   1991    TEX   929449500           Texas Rangers
+182   1991    TOR   915511182       Toronto Blue Jays
+183   1992    ATL  1973643981          Atlanta Braves
+184   1992    BAL  1640866023       Baltimore Orioles
+185   1992    BOS  5320491248        Boston Americans
+186   1992    CAL  1111978688       California Angels
+187   1992    CHA  3679621626       Chicago White Sox
+188   1992    CHN  4384963842 Chicago White Stockings
+189   1992    CIN  4778889367         Cincinnati Reds
+190   1992    CLE  1143511368         Cleveland Blues
+191   1992    DET  3333385748          Detroit Tigers
+192   1992    HOU   939857500      Houston Colt .45's
+193   1992    KCA  1830267036      Kansas City Royals
+194   1992    LAN  2911230790     Los Angeles Dodgers
+195   1992    MIN  1737725708         Minnesota Twins
+196   1992    ML4   868382676       Milwaukee Brewers
+197   1992    MON   569604024          Montreal Expos
+198   1992    NYA  4505200080    New York Highlanders
+199   1992    NYN  2720722122           New York Mets
+200   1992    OAK  2256925000       Oakland Athletics
+201   1992    PHI  3413736760    Philadelphia Quakers
+202   1992    PIT  4616406712    Pittsburg Alleghenys
+203   1992    SDN  1450125018        San Diego Padres
+204   1992    SEA  1066272318        Seattle Mariners
+205   1992    SFN  2155605920    San Francisco Giants
+206   1992    SLN  3613482516        St. Louis Browns
+207   1992    TEX  1536536517           Texas Rangers
+208   1992    TOR  2060278636       Toronto Blue Jays
+209   1993    ATL  2373560769          Atlanta Braves
+210   1993    BAL  2007658500       Baltimore Orioles
+211   1993    BOS  4528711126        Boston Americans
+212   1993    CAL   914826688       California Angels
+213   1993    CHA  4842932252       Chicago White Sox
+214   1993    CHN  5789839902 Chicago White Stockings
+215   1993    CIN  5968995578         Cincinnati Reds
+216   1993    CLE  2264442000         Cleveland Blues
+217   1993    COL   310605000        Colorado Rockies
+218   1993    DET  4654320130          Detroit Tigers
+219   1993    FLO   367280355         Florida Marlins
+220   1993    HOU  1842840500      Houston Colt .45's
+221   1993    KCA  2232693018      Kansas City Royals
+222   1993    LAN  2556579935     Los Angeles Dodgers
+223   1993    MIN  1749511846         Minnesota Twins
+224   1993    ML4   666591352       Milwaukee Brewers
+225   1993    MON   680375988          Montreal Expos
+226   1993    NYA  5114988000    New York Highlanders
+227   1993    NYN  2381663687           New York Mets
+228   1993    OAK  2079678315       Oakland Athletics
+229   1993    PHI  3995366760    Philadelphia Quakers
+230   1993    PIT  3375855512    Pittsburg Alleghenys
+231   1993    SDN  1377611982        San Diego Padres
+232   1993    SEA  1504031318        Seattle Mariners
+233   1993    SFN  2278250000    San Francisco Giants
+234   1993    SLN  3061120754        St. Louis Browns
+235   1993    TEX  1855224909           Texas Rangers
+236   1993    TOR  2174841636       Toronto Blue Jays
+237   1994    ATL  2814860241          Atlanta Braves
+238   1994    BAL  2680634061       Baltimore Orioles
+239   1994    BOS  4618808248        Boston Americans
+240   1994    CAL   804998976       California Angels
+241   1994    CHA  4780427992       Chicago White Sox
+242   1994    CHN  5334237951 Chicago White Stockings
+243   1994    CIN  5447923789         Cincinnati Reds
+244   1994    CLE  3719841000         Cleveland Blues
+245   1994    COL   716619990        Colorado Rockies
+246   1994    DET  5056473122          Detroit Tigers
+247   1994    FLO   411027000         Florida Marlins
+248   1994    HOU  2020686000      Houston Colt .45's
+249   1994    KCA  2189232036      Kansas City Royals
+250   1994    LAN  2470000065     Los Angeles Dodgers
+251   1994    MIN  1763187000         Minnesota Twins
+252   1994    ML4   681814000       Milwaukee Brewers
+253   1994    MON   687528000          Montreal Expos
+254   1994    NYA  5487760080    New York Highlanders
+255   1994    NYN  1888351563           New York Mets
+256   1994    OAK  1879487500       Oakland Athletics
+257   1994    PHI  4423860000    Philadelphia Quakers
+258   1994    PIT  3293546000    Pittsburg Alleghenys
+259   1994    SDN   805481982        San Diego Padres
+260   1994    SEA  1344511000        Seattle Mariners
+261   1994    SFN  2771513290    San Francisco Giants
+262   1994    SLN  3835103731        St. Louis Browns
+263   1994    TEX  1681653447           Texas Rangers
+264   1994    TOR  1997948728       Toronto Blue Jays
+265   1995    ATL  2692420365          Atlanta Braves
+266   1995    BAL  3032033949       Baltimore Orioles
+267   1995    BOS  3959573196        Boston Americans
+268   1995    CAL   999141472       California Angels
+269   1995    CHA  5729276404       Chicago White Sox
+270   1995    CHN  4337357598 Chicago White Stockings
+271   1995    CIN  5738241110         Cincinnati Reds
+272   1995    CLE  4628415870         Cleveland Blues
+273   1995    COL  1024641510        Colorado Rockies
+274   1995    DET  4519388496          Detroit Tigers
+275   1995    FLO   465799839         Florida Marlins
+276   1995    HOU  2084359874      Houston Colt .45's
+277   1995    KCA  1594773036      Kansas City Royals
+278   1995    LAN  2552758065     Los Angeles Dodgers
+279   1995    MIN  1575451000         Minnesota Twins
+280   1995    ML4   498367100       Milwaukee Brewers
+281   1995    MON   445104000          Montreal Expos
+282   1995    NYA  5864982120    New York Highlanders
+283   1995    NYN  1688174512           New York Mets
+284   1995    OAK  2075657375       Oakland Athletics
+285   1995    PHI  4277832300    Philadelphia Quakers
+286   1995    PIT  2496326920    Pittsburg Alleghenys
+287   1995    SDN  1424646036        San Diego Padres
+288   1995    SEA  1678140306        Seattle Mariners
+289   1995    SFN  2370080505    San Francisco Giants
+290   1995    SLN  4860231000        St. Louis Browns
+291   1995    TEX  1763654001           Texas Rangers
+292   1995    TOR  2327140000       Toronto Blue Jays
+293   1996    ATL  2832814500          Atlanta Braves
+294   1996    BAL  3759831735       Baltimore Orioles
+295   1996    BOS  5172007000        Boston Americans
+296   1996    CAL   919616000       California Angels
+297   1996    CHA  5507019000       Chicago White Sox
+298   1996    CHN  4862907000 Chicago White Stockings
+299   1996    CIN  5656002422         Cincinnati Reds
+300   1996    CLE  5869097920         Cleveland Blues
+301   1996    COL  1205394690        Colorado Rockies
+302   1996    DET  2859436000          Detroit Tigers
+303   1996    FLO   589427500         Florida Marlins
+304   1996    HOU  1737707000      Houston Colt .45's
+305   1996    KCA  1095187500      Kansas City Royals
+306   1996    LAN  2298075000     Los Angeles Dodgers
+307   1996    MIN  1433254000         Minnesota Twins
+308   1996    ML4   608440000       Milwaukee Brewers
+309   1996    MON   585522000          Montreal Expos
+310   1996    NYA  6503015040    New York Highlanders
+311   1996    NYN  1493249500           New York Mets
+312   1996    OAK  1168365000       Oakland Athletics
+313   1996    PHI  4804030000    Philadelphia Quakers
+314   1996    PIT  3130380000    Pittsburg Alleghenys
+315   1996    SDN  1530801288        San Diego Padres
+316   1996    SEA  1901111046        Seattle Mariners
+317   1996    SFN  2414407125    San Francisco Giants
+318   1996    SLN  5275326377        St. Louis Browns
+319   1996    TEX  1991117928           Texas Rangers
+320   1996    TOR  1359533818       Toronto Blue Jays
+321   1997    ANA   249083776          Anaheim Angels
+322   1997    ATL  2979874500          Atlanta Braves
+323   1997    BAL  4037631600       Baltimore Orioles
+324   1997    BOS  5314167500        Boston Americans
+325   1997    CHA  7044280000       Chicago White Sox
+326   1997    CHN  6196833951 Chicago White Stockings
+327   1997    CIN  6619144000         Cincinnati Reds
+328   1997    CLE  6929900120         Cleveland Blues
+329   1997    COL  1306790010        Colorado Rockies
+330   1997    DET  2107184000          Detroit Tigers
+331   1997    FLO   925157500         Florida Marlins
+332   1997    HOU  2121427500      Houston Colt .45's
+333   1997    KCA  1871370000      Kansas City Royals
+334   1997    LAN  2949719760     Los Angeles Dodgers
+335   1997    MIN  2112495000         Minnesota Twins
+336   1997    ML4   662349464       Milwaukee Brewers
+337   1997    MON   694638000          Montreal Expos
+338   1997    NYA  7468985400    New York Highlanders
+339   1997    NYN  2427824400           New York Mets
+340   1997    OAK  1321017500       Oakland Athletics
+341   1997    PHI  5131910000    Philadelphia Quakers
+342   1997    PIT  1464946712    Pittsburg Alleghenys
+343   1997    SDN  2017638288        San Diego Padres
+344   1997    SEA  1910870406        Seattle Mariners
+345   1997    SFN  2313504570    San Francisco Giants
+346   1997    SLN  5954823377        St. Louis Browns
+347   1997    TEX  2725890738           Texas Rangers
+348   1997    TOR  2165672318       Toronto Blue Jays
+349   1998    ANA   330248000          Anaheim Angels
+350   1998    ARI   808675000    Arizona Diamondbacks
+351   1998    ATL  3487602000          Atlanta Braves
+352   1998    BAL  4992538746       Baltimore Orioles
+353   1998    BOS  6924354000        Boston Americans
+354   1998    CHA  4676870000       Chicago White Sox
+355   1998    CHN  7473186000 Chicago White Stockings
+356   1998    CIN  3059665000         Cincinnati Reds
+357   1998    CLE  7417620252         Cleveland Blues
+358   1998    COL  1514539440        Colorado Rockies
+359   1998    DET  2935930000          Detroit Tigers
+360   1998    FLO   785130673         Florida Marlins
+361   1998    HOU  2584814000      Houston Colt .45's
+362   1998    KCA  1990575000      Kansas City Royals
+363   1998    LAN  3173300000     Los Angeles Dodgers
+364   1998    MIL   847872600       Milwaukee Brewers
+365   1998    MIN  1731505000         Minnesota Twins
+366   1998    MON   383094000          Montreal Expos
+367   1998    NYA  8016824040    New York Highlanders
+368   1998    NYN  3176757939           New York Mets
+369   1998    OAK  1171665000       Oakland Athletics
+370   1998    PHI  5081650000    Philadelphia Quakers
+371   1998    PIT  2048840000    Pittsburg Alleghenys
+372   1998    SDN  2530521000        San Diego Padres
+373   1998    SEA  2488003656        Seattle Mariners
+374   1998    SFN  2766779210    San Francisco Giants
+375   1998    SLN  7162100251        St. Louis Browns
+376   1998    TBA   682000000    Tampa Bay Devil Rays
+377   1998    TEX  2885176845           Texas Rangers
+378   1998    TOR  2363296000       Toronto Blue Jays
+379   1999    ANA   443105328          Anaheim Angels
+380   1999    ARI  1717599975    Arizona Diamondbacks
+381   1999    ATL  4168980000          Atlanta Braves
+382   1999    BAL  5561804547       Baltimore Orioles
+383   1999    BOS  7746695000        Boston Americans
+384   1999    CHA  3125640000       Chicago White Sox
+385   1999    CHN  9164421000 Chicago White Stockings
+386   1999    CIN  4517047213         Cincinnati Reds
+387   1999    CLE  8903372364         Cleveland Blues
+388   1999    COL  1858075110        Colorado Rockies
+389   1999    DET  4451739252          Detroit Tigers
+390   1999    FLO   400615000         Florida Marlins
+391   1999    HOU  3349754000      Houston Colt .45's
+392   1999    KCA  1416150000      Kansas City Royals
+393   1999    LAN  5256059445     Los Angeles Dodgers
+394   1999    MIL  1084434875       Milwaukee Brewers
+395   1999    MIN  1317965000         Minnesota Twins
+396   1999    MON   644508000          Montreal Expos
+397   1999    NYA 10408123080    New York Highlanders
+398   1999    NYN  3970617612           New York Mets
+399   1999    OAK  1343750815       Oakland Athletics
+400   1999    PHI  4436950000    Philadelphia Quakers
+401   1999    PIT  3358882576    Pittsburg Alleghenys
+402   1999    SDN  2687481666        San Diego Padres
+403   1999    SEA  2489750138        Seattle Mariners
+404   1999    SFN  3028678705    San Francisco Giants
+405   1999    SLN  6520943545        St. Louis Browns
+406   1999    TBA   971750000    Tampa Bay Devil Rays
+407   1999    TEX  3912206481           Texas Rangers
+408   1999    TOR  2090439318       Toronto Blue Jays
+409   2000    ANA   411713336          Anaheim Angels
+410   2000    ARI  2025695825    Arizona Diamondbacks
+411   2000    ATL  4818656652          Atlanta Braves
+412   2000    BAL  5619873015       Baltimore Orioles
+413   2000    BOS  9508720626        Boston Americans
+414   2000    CHA  3798287000       Chicago White Sox
+415   2000    CHN  8899281951 Chicago White Stockings
+416   2000    CIN  6233337600         Cincinnati Reds
+417   2000    CLE  9257454062         Cleveland Blues
+418   2000    COL  1833335700        Colorado Rockies
+419   2000    DET  7108350374          Detroit Tigers
+420   2000    FLO   377568000         Florida Marlins
+421   2000    HOU  3128635771      Houston Colt .45's
+422   2000    KCA  1265382000      Kansas City Royals
+423   2000    LAN  5715078590     Los Angeles Dodgers
+424   2000    MIL   912633325       Milwaukee Brewers
+425   2000    MIN  1024209000         Minnesota Twins
+426   2000    MON  1187795988          Montreal Expos
+427   2000    NYA 11080591200    New York Highlanders
+428   2000    NYN  4850096336           New York Mets
+429   2000    OAK  1758423315       Oakland Athletics
+430   2000    PHI  6623120000    Philadelphia Quakers
+431   2000    PIT  3934253424    Pittsburg Alleghenys
+432   2000    SDN  2960334000        San Diego Padres
+433   2000    SEA  2710090000        Seattle Mariners
+434   2000    SFN  3492958690    San Francisco Giants
+435   2000    SLN  8050456053        St. Louis Browns
+436   2000    TBA  1569128225    Tampa Bay Devil Rays
+437   2000    TEX  3610591971           Texas Rangers
+438   2000    TOR  2062563272       Toronto Blue Jays
+439   2001    ANA   380281336          Anaheim Angels
+440   2001    ARI  2127074975    Arizona Diamondbacks
+441   2001    ATL  5240361462          Atlanta Braves
+442   2001    BAL  4664368260       Baltimore Orioles
+443   2001    BOS 13424371626        Boston Americans
+444   2001    CHA  8009747374       Chicago White Sox
+445   2001    CHN  9513227451 Chicago White Stockings
+446   2001    CIN  6515138000         Cincinnati Reds
+447   2001    CLE 11364544122         Cleveland Blues
+448   2001    COL  2146240020        Colorado Rockies
+449   2001    DET  6516772374          Detroit Tigers
+450   2001    FLO   679487500         Florida Marlins
+451   2001    HOU  3697372687      Houston Colt .45's
+452   2001    KCA  1912815000      Kansas City Royals
+453   2001    LAN  7091886945     Los Angeles Dodgers
+454   2001    MIL  1097170825       Milwaukee Brewers
+455   2001    MIN  1496060000         Minnesota Twins
+456   2001    MON  1265742000          Montreal Expos
+457   2001    NYA 13474457160    New York Highlanders
+458   2001    NYN  5683640108           New York Mets
+459   2001    OAK  1859591250       Oakland Athletics
+460   2001    PHI  5832936620    Philadelphia Quakers
+461   2001    PIT  7855473288    Pittsburg Alleghenys
+462   2001    SDN  2115872982        San Diego Padres
+463   2001    SEA  3437158364        Seattle Mariners
+464   2001    SFN  4113210855    San Francisco Giants
+465   2001    SLN 10288521623        St. Louis Browns
+466   2001    TBA  1424500000    Tampa Bay Devil Rays
+467   2001    TEX  4520308500           Texas Rangers
+468   2001    TOR  3537215954       Toronto Blue Jays
+469   2002    ANA   493773336          Anaheim Angels
+470   2002    ARI  2570499975    Arizona Diamondbacks
+471   2002    ATL  5293610919          Atlanta Braves
+472   2002    BAL  4174050603       Baltimore Orioles
+473   2002    BOS 13220659320        Boston Americans
+474   2002    CHA  6960445626       Chicago White Sox
+475   2002    CHN 11126552451 Chicago White Stockings
+476   2002    CIN  5991701870         Cincinnati Reds
+477   2002    CLE  9626952778         Cleveland Blues
+478   2002    COL  1705531290        Colorado Rockies
+479   2002    DET  6715856000          Detroit Tigers
+480   2002    FLO   797618423         Florida Marlins
+481   2002    HOU  3870353437      Houston Colt .45's
+482   2002    KCA  2551878000      Kansas City Royals
+483   2002    LAN  6165311945     Los Angeles Dodgers
+484   2002    MIL  1257195825       Milwaukee Brewers
+485   2002    MIN  2506350000         Minnesota Twins
+486   2002    MON  1392138000          Montreal Expos
+487   2002    NYA 15111429960    New York Highlanders
+488   2002    NYN  5772649173           New York Mets
+489   2002    OAK  2200229185       Oakland Athletics
+490   2002    PHI  8113699860    Philadelphia Quakers
+491   2002    PIT  5756009464    Pittsburg Alleghenys
+492   2002    SDN  2236950000        San Diego Padres
+493   2002    SEA  3693002728        Seattle Mariners
+494   2002    SFN  5089489275    San Francisco Giants
+495   2002    SLN  9780574625        St. Louis Browns
+496   2002    TBA   859500000    Tampa Bay Devil Rays
+497   2002    TEX  5381832222           Texas Rangers
+498   2002    TOR  3535759318       Toronto Blue Jays
+499   2003    ANA   632253336          Anaheim Angels
+500   2003    ARI  2016425000    Arizona Diamondbacks
+501   2003    ATL  6055889019          Atlanta Braves
+502   2003    BAL  5097547500       Baltimore Orioles
+503   2003    BOS 12193473000        Boston Americans
+504   2003    CHA  6223220000       Chicago White Sox
+505   2003    CHN 11740644951 Chicago White Stockings
+506   2003    CIN  7894303711         Cincinnati Reds
+507   2003    CLE  5927349748         Cleveland Blues
+508   2003    COL  2015390010        Colorado Rockies
+509   2003    DET  5998496000          Detroit Tigers
+510   2003    FLO   939550000         Florida Marlins
+511   2003    HOU  4333440000      Houston Colt .45's
+512   2003    KCA  2187972000      Kansas City Royals
+513   2003    LAN  6862220300     Los Angeles Dodgers
+514   2003    MIL  1015675000       Milwaukee Brewers
+515   2003    MIN  3441310000         Minnesota Twins
+516   2003    MON  1870146000          Montreal Expos
+517   2003    NYA 18329977680    New York Highlanders
+518   2003    NYN  7129462169           New York Mets
+519   2003    OAK  2764345870       Oakland Athletics
+520   2003    PHI  9909200000    Philadelphia Quakers
+521   2003    PIT  7454490344    Pittsburg Alleghenys
+522   2003    SDN  2441340000        San Diego Padres
+523   2003    SEA  4000121682        Seattle Mariners
+524   2003    SFN  5385390855    San Francisco Giants
+525   2003    SLN 10976053246        St. Louis Browns
+526   2003    TBA   490750000    Tampa Bay Devil Rays
+527   2003    TEX  5278075017           Texas Rangers
+528   2003    TOR  2358374000       Toronto Blue Jays
+529   2004    ANA   804277336          Anaheim Angels
+530   2004    ARI  1744518750    Arizona Diamondbacks
+531   2004    ATL  5140402500          Atlanta Braves
+532   2004    BAL  3562009977       Baltimore Orioles
+533   2004    BOS 15530417000        Boston Americans
+534   2004    CHA  7955925000       Chicago White Sox
+535   2004    CHN 13312320000 Chicago White Stockings
+536   2004    CIN  6199828250         Cincinnati Reds
+537   2004    CLE  4186954600         Cleveland Blues
+538   2004    COL  1963355010        Colorado Rockies
+539   2004    DET  5713504000          Detroit Tigers
+540   2004    FLO   800717798         Florida Marlins
+541   2004    HOU  4599217000      Houston Colt .45's
+542   2004    KCA  2570886000      Kansas City Royals
+543   2004    LAN  6038630065     Los Angeles Dodgers
+544   2004    MIL   688212500       Milwaukee Brewers
+545   2004    MIN  3322270000         Minnesota Twins
+546   2004    MON  1472310000          Montreal Expos
+547   2004    NYA 22103274000    New York Highlanders
+548   2004    NYN  5896319170           New York Mets
+549   2004    OAK  3268411685       Oakland Athletics
+550   2004    PHI 13008683380    Philadelphia Quakers
+551   2004    PIT  4382998344    Pittsburg Alleghenys
+552   2004    SDN  2990780982        San Diego Padres
+553   2004    SEA  3749728364        Seattle Mariners
+554   2004    SFN  5331245790    San Francisco Giants
+555   2004    SLN 10902911623        St. Louis Browns
+556   2004    TBA   738916675    Tampa Bay Devil Rays
+557   2004    TEX  2807571267           Texas Rangers
+558   2004    TOR  2300782000       Toronto Blue Jays
+559   2005    ARI  1558229150    Arizona Diamondbacks
+560   2005    ATL  4928066214          Atlanta Braves
+561   2005    BAL  5100088977       Baltimore Orioles
+562   2005    BOS 15067625250        Boston Americans
+563   2005    CHA  9171716000       Chicago White Sox
+564   2005    CHN 12793841151 Chicago White Stockings
+565   2005    CIN  8231713539         Cincinnati Reds
+566   2005    CLE  5063305000         Cleveland Blues
+567   2005    COL  1435170000        Colorado Rockies
+568   2005    DET  8429224000          Detroit Tigers
+569   2005    FLO  1147767846         Florida Marlins
+570   2005    HOU  4683519000      Houston Colt .45's
+571   2005    KCA  1991574000      Kansas City Royals
+572   2005    LAA  2087092084      Los Angeles Angels
+573   2005    LAN  5397535000     Los Angeles Dodgers
+574   2005    MIL   998370825       Milwaukee Brewers
+575   2005    MIN  3483532000         Minnesota Twins
+576   2005    NYA 24996818040    New York Highlanders
+577   2005    NYN  6179655081           New York Mets
+578   2005    OAK  3048416910       Oakland Athletics
+579   2005    PHI 13373080000    Philadelphia Quakers
+580   2005    PIT  5186088000    Pittsburg Alleghenys
+581   2005    SDN  3417704982        San Diego Padres
+582   2005    SEA  4036699364        Seattle Mariners
+583   2005    SFN  5862967500    San Francisco Giants
+584   2005    SLN 12065995123        St. Louis Browns
+585   2005    TBA   741976675    Tampa Bay Devil Rays
+586   2005    TEX  2848299000           Texas Rangers
+587   2005    TOR  2103097000       Toronto Blue Jays
+588   2005    WAS  1263119000     Washington Senators
+589   2006    ARI  1492105650    Arizona Diamondbacks
+590   2006    ATL  5138941932          Atlanta Braves
+591   2006    BAL  5008405158       Baltimore Orioles
+592   2006    BOS 14652178528        Boston Americans
+593   2006    CHA 12535581374       Chicago White Sox
+594   2006    CHN 13880401353 Chicago White Stockings
+595   2006    CIN  8100966027         Cincinnati Reds
+596   2006    CLE  6835843000         Cleveland Blues
+597   2006    COL  1236990000        Colorado Rockies
+598   2006    DET 10078769652          Detroit Tigers
+599   2006    FLO   278758500         Florida Marlins
+600   2006    HOU  5410360535      Houston Colt .45's
+601   2006    KCA  2553876000      Kansas City Royals
+602   2006    LAA  2276384000      Los Angeles Angels
+603   2006    LAN  6399067155     Los Angeles Dodgers
+604   2006    MIL  1439208325       Milwaukee Brewers
+605   2006    MIN  3930552372         Minnesota Twins
+606   2006    NYA 23359569480    New York Highlanders
+607   2006    NYN  6166182743           New York Mets
+608   2006    OAK  3423369345       Oakland Athletics
+609   2006    PHI 12358266620    Philadelphia Quakers
+610   2006    PIT  6353614000    Pittsburg Alleghenys
+611   2006    SDN  3774391614        San Diego Padres
+612   2006    SEA  4046152318        Seattle Mariners
+613   2006    SFN  5853667235    San Francisco Giants
+614   2006    SLN 11644769601        St. Louis Browns
+615   2006    TBA   872949175    Tampa Bay Devil Rays
+616   2006    TEX  3479661762           Texas Rangers
+617   2006    TOR  3282790000       Toronto Blue Jays
+618   2006    WAS  1641718000     Washington Senators
+619   2007    ARI  1301688650    Arizona Diamondbacks
+620   2007    ATL  4975577481          Atlanta Braves
+621   2007    BAL  6429061752       Baltimore Orioles
+622   2007    BOS 17449198108        Boston Americans
+623   2007    CHA 13257963626       Chicago White Sox
+624   2007    CHN 14651538804 Chicago White Stockings
+625   2007    CIN  9113822340         Cincinnati Reds
+626   2007    CLE  7524138574         Cleveland Blues
+627   2007    COL  1621230000        Colorado Rockies
+628   2007    DET 11565645018          Detroit Tigers
+629   2007    FLO   579633000         Florida Marlins
+630   2007    HOU  5353299000      Houston Colt .45's
+631   2007    KCA  3624291000      Kansas City Royals
+632   2007    LAA  2403529326      Los Angeles Angels
+633   2007    LAN  7049544060     Los Angeles Dodgers
+634   2007    MIL  1774662500       Milwaukee Brewers
+635   2007    MIN  4429249000         Minnesota Twins
+636   2007    NYA 22711085400    New York Highlanders
+637   2007    NYN  7029131443           New York Mets
+638   2007    OAK  4365181700       Oakland Athletics
+639   2007    PHI 12519949820    Philadelphia Quakers
+640   2007    PIT  5241145288    Pittsburg Alleghenys
+641   2007    SDN  3137970618        San Diego Padres
+642   2007    SEA  4897198318        Seattle Mariners
+643   2007    SFN  5864238640    San Francisco Giants
+644   2007    SLN 11827573813        St. Louis Browns
+645   2007    TBA   603087500    Tampa Bay Devil Rays
+646   2007    TEX  3484252425           Texas Rangers
+647   2007    TOR  3769368800       Toronto Blue Jays
+648   2007    WAS   960635000     Washington Senators
+649   2008    ARI  1655067800    Arizona Diamondbacks
+650   2008    ATL  5834843931          Atlanta Braves
+651   2008    BAL  4636540974       Baltimore Orioles
+652   2008    BOS 16273584270        Boston Americans
+653   2008    CHA 14785098504       Chicago White Sox
+654   2008    CHN 17396837451 Chicago White Stockings
+655   2008    CIN  9857653435         Cincinnati Reds
+656   2008    CLE  9634348052         Cleveland Blues
+657   2008    COL  2059665000        Colorado Rockies
+658   2008    DET 16797593912          Detroit Tigers
+659   2008    FLO   414418500         Florida Marlins
+660   2008    HOU  5424755254      Houston Colt .45's
+661   2008    KCA  3145257000      Kansas City Royals
+662   2008    LAA  2622759326      Los Angeles Angels
+663   2008    LAN  7708254840     Los Angeles Dodgers
+664   2008    MIL  2023437475       Milwaukee Brewers
+665   2008    MIN  3529831492         Minnesota Twins
+666   2008    NYA 24947614680    New York Highlanders
+667   2008    NYN  8405395936           New York Mets
+668   2008    OAK  2638191930       Oakland Athletics
+669   2008    PHI 13703183200    Philadelphia Quakers
+670   2008    PIT  6621810488    Pittsburg Alleghenys
+671   2008    SDN  3978591264        San Diego Padres
+672   2008    SEA  5412658172        Seattle Mariners
+673   2008    SFN  4978642500    San Francisco Giants
+674   2008    SLN 13050802819        St. Louis Browns
+675   2008    TBA  1095514925    Tampa Bay Devil Rays
+676   2008    TEX  3453328626           Texas Rangers
+677   2008    TOR  4498519400       Toronto Blue Jays
+678   2008    WAS  1428986000     Washington Senators
+679   2009    ARI  1827891650    Arizona Diamondbacks
+680   2009    ATL  5513391462          Atlanta Braves
+681   2009    BAL  4630014954       Baltimore Orioles
+682   2009    BOS 14804211878        Boston Americans
+683   2009    CHA 11720357000       Chicago White Sox
+684   2009    CHN 19816923000 Chicago White Stockings
+685   2009    CIN  9783280500         Cincinnati Reds
+686   2009    CLE  9952658252         Cleveland Blues
+687   2009    COL  2256030000        Colorado Rockies
+688   2009    DET 14040387690          Detroit Tigers
+689   2009    FLO   699846000         Florida Marlins
+690   2009    HOU  6282781254      Houston Colt .45's
+691   2009    KCA  3808043982      Kansas City Royals
+692   2009    LAA  2501598000      Los Angeles Angels
+693   2009    LAN  6526948480     Los Angeles Dodgers
+694   2009    MIL  2004562550       Milwaukee Brewers
+695   2009    MIN  4048554492         Minnesota Twins
+696   2009    NYA 24173902680    New York Highlanders
+697   2009    NYN  9111813207           New York Mets
+698   2009    OAK  3405050000       Oakland Athletics
+699   2009    PHI 15820566440    Philadelphia Quakers
+700   2009    PIT  6622248000    Pittsburg Alleghenys
+701   2009    SDN  2340019800        San Diego Padres
+702   2009    SEA  4549591636        Seattle Mariners
+703   2009    SFN  5396719250    San Francisco Giants
+704   2009    SLN 11597221579        St. Louis Browns
+705   2009    TBA  1582825850    Tampa Bay Devil Rays
+706   2009    TEX  3477118698           Texas Rangers
+707   2009    TOR  3704761800       Toronto Blue Jays
+708   2009    WAS  1558128000     Washington Senators
+709   2010    ARI  1517954150    Arizona Diamondbacks
+710   2010    ATL  4812148962          Atlanta Braves
+711   2010    BAL  5631262500       Baltimore Orioles
+712   2010    BOS 19818574626        Boston Americans
+713   2010    CHA 12874660000       Chicago White Sox
+714   2010    CHN 21551523000 Chicago White Stockings
+715   2010    CIN  9544285086         Cincinnati Reds
+716   2010    CLE  7466883852         Cleveland Blues
+717   2010    COL  2526810000        Colorado Rockies
+718   2010    DET 14989521216          Detroit Tigers
+719   2010    FLO  1083564661         Florida Marlins
+720   2010    HOU  5633685500      Houston Colt .45's
+721   2010    KCA  3855881340      Kansas City Royals
+722   2010    LAA  2309205052      Los Angeles Angels
+723   2010    LAN  6198271040     Los Angeles Dodgers
+724   2010    MIL  2027706950       Milwaukee Brewers
+725   2010    MIN  6048668292         Minnesota Twins
+726   2010    NYA 24760006680    New York Highlanders
+727   2010    NYN  8199799462           New York Mets
+728   2010    OAK  3039019500       Oakland Athletics
+729   2010    PHI 19869973060    Philadelphia Quakers
+730   2010    PIT  4752248000    Pittsburg Alleghenys
+731   2010    SDN  2041162200        San Diego Padres
+732   2010    SEA  3979460000        Seattle Mariners
+733   2010    SFN  6411686645    San Francisco Giants
+734   2010    SLN 12253838381        St. Louis Browns
+735   2010    TBA  1798086775    Tampa Bay Devil Rays
+736   2010    TEX  2817777744           Texas Rangers
+737   2010    TOR  2862764000       Toronto Blue Jays
+738   2010    WAS  1596400000     Washington Senators
+739   2011    ARI  1340995825    Arizona Diamondbacks
+740   2011    ATL  4959153444          Atlanta Braves
+741   2011    BAL  5885978622       Baltimore Orioles
+742   2011    BOS 19735021950        Boston Americans
+743   2011    CHA 15590258000       Chicago White Sox
+744   2011    CHN 18381957363 Chicago White Stockings
+745   2011    CIN 10100968822         Cincinnati Reds
+746   2011    CLE  5950741052         Cleveland Blues
+747   2011    COL  2644442130        Colorado Rockies
+748   2011    DET 12895428182          Detroit Tigers
+749   2011    FLO  1081936000         Florida Marlins
+750   2011    HOU  4312334000      Houston Colt .45's
+751   2011    KCA  1928448000      Kansas City Royals
+752   2011    LAA  3047949652      Los Angeles Angels
+753   2011    LAN  6772284935     Los Angeles Dodgers
+754   2011    MIL  2137433325       Milwaukee Brewers
+755   2011    MIN  6989694000         Minnesota Twins
+756   2011    NYA 24273003360    New York Highlanders
+757   2011    NYN  7249685849           New York Mets
+758   2011    OAK  3659507500       Oakland Athletics
+759   2011    PHI 24216693060    Philadelphia Quakers
+760   2011    PIT  6126392000    Pittsburg Alleghenys
+761   2011    SDN  2476933560        San Diego Padres
+762   2011    SEA  3961087600        Seattle Mariners
+763   2011    SFN  7682891645    San Francisco Giants
+764   2011    SLN 13811797932        St. Louis Browns
+765   2011    TBA  1026339275    Tampa Bay Devil Rays
+766   2011    TEX  4707262464           Texas Rangers
+767   2011    TOR  2878118800       Toronto Blue Jays
+768   2011    WAS  1660280128     Washington Senators
+769   2012    ARI  1845120825    Arizona Diamondbacks
+770   2012    ATL  4721306694          Atlanta Braves
+771   2012    BAL  5337425931       Baltimore Orioles
+772   2012    BOS 21128767274        Boston Americans
+773   2012    CHA 11824179000       Chicago White Sox
+774   2012    CHN 12964963851 Chicago White Stockings
+775   2012    CIN 10933080928         Cincinnati Reds
+776   2012    CLE  9568496600         Cleveland Blues
+777   2012    COL  2342087130        Colorado Rockies
+778   2012    DET 16140600000          Detroit Tigers
+779   2012    HOU  3699711000      Houston Colt .45's
+780   2012    KCA  3289476150      Kansas City Royals
+781   2012    LAA  3398673652      Los Angeles Angels
+782   2012    LAN  6184332375     Los Angeles Dodgers
+783   2012    MIA  1298858000           Miami Marlins
+784   2012    MIL  2441348600       Milwaukee Brewers
+785   2012    MIN  5833270000         Minnesota Twins
+786   2012    NYA 23582674680    New York Highlanders
+787   2012    NYN  5694592963           New York Mets
+788   2012    OAK  3045487500       Oakland Athletics
+789   2012    PHI 24435451320    Philadelphia Quakers
+790   2012    PIT  8561471864    Pittsburg Alleghenys
+791   2012    SDN  2983213800        San Diego Padres
+792   2012    SEA  3770992600        Seattle Mariners
+793   2012    SFN  7645344395    San Francisco Giants
+794   2012    SLN 14449412922        St. Louis Browns
+795   2012    TBA  1604337500    Tampa Bay Devil Rays
+796   2012    TEX  6146059674           Texas Rangers
+797   2012    TOR  3450423200       Toronto Blue Jays
+798   2012    WAS  2102233718     Washington Senators
+799   2013    ARI  2253300000    Arizona Diamondbacks
+800   2013    ATL  5008676925          Atlanta Braves
+801   2013    BAL  5823139977       Baltimore Orioles
+802   2013    BOS 18486660000        Boston Americans
+803   2013    CHA 14647963794       Chicago White Sox
+804   2013    CHN 14783455722 Chicago White Stockings
+805   2013    CIN 14151793446         Cincinnati Reds
+806   2013    CLE  9244159600         Cleveland Blues
+807   2013    COL  2232272130        Colorado Rockies
+808   2013    DET 17810719000          Detroit Tigers
+809   2013    HOU  1091332700      Houston Colt .45's
+810   2013    KCA  4324953150      Kansas City Royals
+811   2013    LAA  2731844500      Los Angeles Angels
+812   2013    LAN 14518542740     Los Angeles Dodgers
+813   2013    MIA   369620900           Miami Marlins
+814   2013    MIL  1923675825       Milwaukee Brewers
+815   2013    MIN  4670925000         Minnesota Twins
+816   2013    NYA 27837466320    New York Highlanders
+817   2013    NYN  3016349106           New York Mets
+818   2013    OAK  3307287500       Oakland Athletics
+819   2013    PHI 23780846460    Philadelphia Quakers
+820   2013    PIT 10480432000    Pittsburg Alleghenys
+821   2013    SDN  3541617000        San Diego Padres
+822   2013    SEA  3404231978        Seattle Mariners
+823   2013    SFN  9111721710    San Francisco Giants
+824   2013    SLN 12086074410        St. Louis Browns
+825   2013    TBA  1323881800    Tampa Bay Devil Rays
+826   2013    TEX  5738652600           Texas Rangers
+827   2013    TOR  5809252600       Toronto Blue Jays
+828   2013    WAS  2956285020     Washington Senators
+829   2014    ARI  2446537500    Arizona Diamondbacks
+830   2014    ATL  5563713000          Atlanta Braves
+831   2014    BAL  7135704000       Baltimore Orioles
+832   2014    BOS 16960431338        Boston Americans
+833   2014    CHA  9983321000       Chicago White Sox
+834   2014    CHN  9631807500 Chicago White Stockings
+835   2014    CIN 14392927500         Cincinnati Reds
+836   2014    CLE 10022531678         Cleveland Blues
+837   2014    COL  2862105000        Colorado Rockies
+838   2014    DET 18648371000          Detroit Tigers
+839   2014    HOU  2142094300      Houston Colt .45's
+840   2014    KCA  4028080050      Kansas City Royals
+841   2014    LAA  2683741500      Los Angeles Angels
+842   2014    LAN 14105949000     Los Angeles Dodgers
+843   2014    MIA   460205900           Miami Marlins
+844   2014    MIL  2530425000       Milwaukee Brewers
+845   2014    MIN  5193275000         Minnesota Twins
+846   2014    NYA 23705268840    New York Highlanders
+847   2014    NYN  5218976390           New York Mets
+848   2014    OAK  3982462000       Oakland Athletics
+849   2014    PHI 25332295380    Philadelphia Quakers
+850   2014    PIT 10496208000    Pittsburg Alleghenys
+851   2014    SDN  4087027800        San Diego Padres
+852   2014    SEA  4256430600        Seattle Mariners
+853   2014    SFN 10628160855    San Francisco Giants
+854   2014    SLN 15810783000        St. Louis Browns
+855   2014    TBA  1817227500    Tampa Bay Devil Rays
+856   2014    TEX  5725008009           Texas Rangers
+857   2014    TOR  5056324600       Toronto Blue Jays
+858   2014    WAS  3431575680     Washington Senators
+859   2015    ARI  1545850000    Arizona Diamondbacks
+860   2015    ATL  4091531250          Atlanta Braves
+861   2015    BAL  7938093477       Baltimore Orioles
+862   2015    BOS 22094614800        Boston Americans
+863   2015    CHA 13709591400       Chicago White Sox
+864   2015    CHN 17034258570 Chicago White Stockings
+865   2015    CIN 15038614038         Cincinnati Reds
+866   2015    CLE 10694979452         Cleveland Blues
+867   2015    COL  2870658000        Colorado Rockies
+868   2015    DET 21018739500          Detroit Tigers
+869   2015    HOU  4407628200      Houston Colt .45's
+870   2015    KCA  6053779350      Kansas City Royals
+871   2015    LAA  2640119130      Los Angeles Angels
+872   2015    LAN 14026480000     Los Angeles Dodgers
+873   2015    MIA   748621500           Miami Marlins
+874   2015    MIL  2521250000       Milwaukee Brewers
+875   2015    MIN  6680810000         Minnesota Twins
+876   2015    NYA 25530234840    New York Highlanders
+877   2015    NYN  5902767663           New York Mets
+878   2015    OAK  4347942555       Oakland Athletics
+879   2015    PHI 15637020000    Philadelphia Quakers
+880   2015    PIT 12089379864    Pittsburg Alleghenys
+881   2015    SDN  6395830200        San Diego Padres
+882   2015    SEA  5621600200        Seattle Mariners
+883   2015    SFN 10705597500    San Francisco Giants
+884   2015    SLN 15620636500        St. Louis Browns
+885   2015    TBA  1613030825    Tampa Bay Devil Rays
+886   2015    TEX  7330882239           Texas Rangers
+887   2015    TOR  5197650400       Toronto Blue Jays
+888   2015    WAS  4045274272     Washington Senators
+889   2016    ARI  2185976575    Arizona Diamondbacks
+890   2016    ATL  3904402587          Atlanta Braves
+891   2016    BAL 11168578464       Baltimore Orioles
+892   2016    BOS 23002582842        Boston Americans
+893   2016    CHA 13785837374       Chicago White Sox
+894   2016    CHN 22647947196 Chicago White Stockings
+895   2016    CIN 11829027847         Cincinnati Reds
+896   2016    CLE  9066051800         Cleveland Blues
+897   2016    COL  3379352130        Colorado Rockies
+898   2016    DET 23774930682          Detroit Tigers
+899   2016    HOU  5788515700      Houston Colt .45's
+900   2016    KCA  7100304750      Kansas City Royals
+901   2016    LAA  3019529326      Los Angeles Angels
+902   2016    LAN 14383744700     Los Angeles Dodgers
+903   2016    MIA   850456222           Miami Marlins
+904   2016    MIL  1719380925       Milwaukee Brewers
+905   2016    MIN  6360158400         Minnesota Twins
+906   2016    NYA 26759735040    New York Highlanders
+907   2016    NYN  8167236869           New York Mets
+908   2016    OAK  4774342870       Oakland Athletics
+909   2016    PHI  8257200000    Philadelphia Quakers
+910   2016    PIT 14113921288    Pittsburg Alleghenys
+911   2016    SDN  5476939956        San Diego Padres
+912   2016    SEA  6241433594        Seattle Mariners
+913   2016    SFN 11196495570    San Francisco Giants
+914   2016    SLN 18740008500        St. Louis Browns
+915   2016    TBA  1427432750    Tampa Bay Devil Rays
+916   2016    TEX  8977974873           Texas Rangers
+917   2016    TOR  6380278200       Toronto Blue Jays
+918   2016    WAS  3682968796     Washington Senators
+[12:40] 28>   C-c C-c^C
+No suitable frames for recover()
+[12:40] 28> z3[1,]
+  yearID teamID SUM(salary)           name
+1   1985    ATL   843999000 Atlanta Braves
+[12:43] 29> z3 = sql("SELECT S.yearID, S.teamID, SUM(salary), name
+FROM Salaries AS S
+INNER JOIN Teams AS T
+ON  S.teamID = T.teamID
+AND
+    S.yearID = T.yearID
+GROUP BY S.teamID, S.yearID;")
++ + + + + + [13:39] 30> z3[1,]
+  yearID teamID SUM(salary)           name
+1   1985    ATL    14807000 Atlanta Braves
+[13:42] 31> z[1,]
+  yearID teamID SUM(salary)
+1   1985    ATL    14807000
+[13:49] 32> z
+*** output flushed ***
+[18:28] 33>  m = sql("SELECT yearID, teamID,  MAX(SUM(salary))
+FROM Salaries
+GROUP BY  yearID;")
++ + Error: misuse of aggregate function SUM()
+
+Enter a frame number, or 0 to exit   
+
+ 1: sql("SELECT yearID, teamID,  MAX(SUM(salary))\nFROM Salaries\nGROUP BY  yearID;")
+ 2: db.R#136: dbGetQuery(dbms, sql)
+ 3: dbGetQuery(dbms, sql)
+ 4: .local(conn, statement, ...)
+ 5: dbSendQuery(conn, statement, ...)
+ 6: dbSendQuery(conn, statement, ...)
+ 7: .local(conn, statement, ...)
+ 8: new("SQLiteResult", sql = statement, ptr = result_create(conn@ptr, statement), conn = conn, bigint = conn@bigint)
+ 9: initialize(value, ...)
+10: initialize(value, ...)
+11: result_create(conn@ptr, statement)
+
+Selection: 0
+[18:28] 33> m = sql("SELECT *, MAX(payroll)
+FROM (
+       SELECT yearID, teamID,  SUM(salary) AS payroll
+       FROM Salaries
+       GROUP BY teamID, yearID
+       )
+GROUP yearID       
+;")
++ + + + + + + Error: near "yearID": syntax error
+
+Enter a frame number, or 0 to exit   
+
+ 1: sql("SELECT *, MAX(payroll)\nFROM (\n       SELECT yearID, teamID,  SUM(salary) AS payroll\n       FROM Salaries\n       GROU
+ 2: db.R#136: dbGetQuery(dbms, sql)
+ 3: dbGetQuery(dbms, sql)
+ 4: .local(conn, statement, ...)
+ 5: dbSendQuery(conn, statement, ...)
+ 6: dbSendQuery(conn, statement, ...)
+ 7: .local(conn, statement, ...)
+ 8: new("SQLiteResult", sql = statement, ptr = result_create(conn@ptr, statement), conn = conn, bigint = conn@bigint)
+ 9: initialize(value, ...)
+10: initialize(value, ...)
+11: result_create(conn@ptr, statement)
+
+Selection: 0
+[18:28] 33> m = sql("SELECT *, MAX(payroll)
+FROM (
+       SELECT yearID, teamID,  SUM(salary) AS payroll
+       FROM Salaries
+       GROUP BY teamID, yearID
+       )
+GROUP BY yearID       
+;")
++ + + + + + + [29:12] 34> dim()
+Error in dim() : 0 arguments passed to 'dim' which requires 1
+No suitable frames for recover()
+[29:12] 34> dim()
+Error in dim() : 0 arguments passed to 'dim' which requires 1
+No suitable frames for recover()
+[29:12] 34> dim(m)
+[1] 32  4
+[29:28] 35> m
+   yearID teamID   payroll MAX(payroll)
+1    1985    ATL  14807000     14807000
+2    1986    NYA  18494253     18494253
+3    1987    NYA  17099714     17099714
+4    1988    NYA  19441152     19441152
+5    1989    LAN  21071562     21071562
+6    1990    KCA  23361084     23361084
+7    1991    OAK  36999167     36999167
+8    1992    TOR  44788666     44788666
+9    1993    TOR  47279166     47279166
+10   1994    ATL  49383513     49383513
+11   1995    TOR  50590000     50590000
+12   1996    BAL  54490315     54490315
+13   1997    NYA  62241545     62241545
+14   1998    BAL  72355634     72355634
+15   1999    NYA  86734359     86734359
+16   2000    NYA  92338260     92338260
+17   2001    NYA 112287143    112287143
+18   2002    NYA 125928583    125928583
+19   2003    NYA 152749814    152749814
+20   2004    NYA 184193950    184193950
+21   2005    NYA 208306817    208306817
+22   2006    NYA 194663079    194663079
+23   2007    NYA 189259045    189259045
+24   2008    NYA 207896789    207896789
+25   2009    NYA 201449189    201449189
+26   2010    NYA 206333389    206333389
+27   2011    NYA 202275028    202275028
+28   2012    NYA 196522289    196522289
+29   2013    NYA 231978886    231978886
+30   2014    LAN 217014600    217014600
+31   2015    LAN 215792000    215792000
+32   2016    NYA 222997792    222997792
+[29:39] 36> names(db)
+ [1] "AllstarFull"         "Appearances"         "AwardsManagers"      "AwardsPlayers"       "AwardsShareManagers"
+ [6] "AwardsSharePlayers"  "Batting"             "BattingPost"         "CollegePlaying"      "Fielding"           
+[11] "FieldingOF"          "FieldingOFsplit"     "FieldingPost"        "HallOfFame"          "HomeGames"          
+[16] "Managers"            "ManagersHalf"        "Parks"               "People"              "Pitching"           
+[21] "PitchingPost"        "Salaries"            "Schools"             "SeriesPost"          "Teams"              
+[26] "TeamsFranchises"     "TeamsHalf"          
+[32:23] 37> head(db$SeriesPost)
+  yearID round teamIDwinner lgIDwinner teamIDloser lgIDloser wins losses ties
+1   1884    WS          PRO         NL         NY4        AA    3      0    0
+2   1885    WS          CHN         NL         SL4        AA    3      3    1
+3   1886    WS          SL4         AA         CHN        NL    4      2    0
+4   1887    WS          DTN         NL         SL4        AA   10      5    0
+5   1888    WS          NY1         NL         SL4        AA    6      4    0
+6   1889    WS          NY1         NL         BR3        AA    6      3    0
+[32:47] 38> tail(db$SeriesPost, 30)
+    yearID round teamIDwinner lgIDwinner teamIDloser lgIDloser wins losses ties
+349   2020 ALWC3          HOU         AL         MIN        AL    2      0    0
+350   2020 ALWC4          OAK         AL         CHA        AL    2      1    0
+351   2020  NLCS          LAN         NL         ATL        NL    4      3    0
+352   2020 NLDS1          LAN         NL         SDN        NL    3      0    0
+353   2020 NLDS2          ATL         NL         MIA        NL    3      0    0
+354   2020 NLWC1          LAN         NL         MIL        NL    2      0    0
+355   2020 NLWC2          SDN         NL         SLN        NL    2      1    0
+356   2020 NLWC3          MIA         NL         CHN        NL    2      0    0
+357   2020 NLWC4          ATL         NL         CIN        NL    2      0    0
+358   2020    WS          LAN         NL         TBA        AL    4      2    0
+359   2021  ALCS          HOU         AL         BOS        AL    4      2    0
+360   2021 ALDS1          HOU         AL         CHA        AL    3      1    0
+361   2021 ALDS2          BOS         AL         TBA        AL    3      1    0
+362   2021  ALWC          BOS         AL         NYA        AL    1      0    0
+363   2021  NLCS          ATL         NL         LAN        NL    4      2    0
+364   2021 NLDS1          ATL         NL         MIL        NL    3      1    0
+365   2021 NLDS2          LAN         NL         SFN        NL    3      2    0
+366   2021  NLWC          LAN         NL         SLN        NL    1      0    0
+367   2021    WS          ATL         NL         HOU        AL    4      2    0
+368   2022  ALCS          HOU         AL         NYA        AL    4      0    0
+369   2022 ALDS1          NYA         AL         CLE        AL    3      2    0
+370   2022 ALDS2          HOU         AL         SEA        AL    3      0    0
+371   2022 ALWC1          CLE         AL         TBA        AL    2      0    0
+372   2022 ALWC2          SEA         AL         TOR        AL    2      0    0
+373   2022  NLCS          PHI         NL         SDN        NL    4      1    0
+374   2022 NLDS1          PHI         NL         ATL        NL    3      1    0
+375   2022 NLDS2          SDN         NL         LAN        NL    3      1    0
+376   2022 NLWC1          SDN         NL         NYN        NL    2      1    0
+377   2022 NLWC2          PHI         NL         SLN        NL    2      0    0
+378   2022    WS          HOU         NL         PHI        NL    4      2    0
+[33:09] 39> tail(db$SeriesPost, 10)
+    yearID round teamIDwinner lgIDwinner teamIDloser lgIDloser wins losses ties
+369   2022 ALDS1          NYA         AL         CLE        AL    3      2    0
+370   2022 ALDS2          HOU         AL         SEA        AL    3      0    0
+371   2022 ALWC1          CLE         AL         TBA        AL    2      0    0
+372   2022 ALWC2          SEA         AL         TOR        AL    2      0    0
+373   2022  NLCS          PHI         NL         SDN        NL    4      1    0
+374   2022 NLDS1          PHI         NL         ATL        NL    3      1    0
+375   2022 NLDS2          SDN         NL         LAN        NL    3      1    0
+376   2022 NLWC1          SDN         NL         NYN        NL    2      1    0
+377   2022 NLWC2          PHI         NL         SLN        NL    2      0    0
+378   2022    WS          HOU         NL         PHI        NL    4      2    0
+[34:53] 40> z[1,]
+  yearID teamID SUM(salary)
+1   1985    ATL    14807000
+[50:29] 41> z2[1, -4]
+  yearID teamID SUM(salary)
+1   1985    ATL   843999000
+[50:34] 42> rbind(z[1,], z2[1, -4])
+  yearID teamID SUM(salary)
+1   1985    ATL    14807000
+2   1985    ATL   843999000
+[50:41] 43> 
