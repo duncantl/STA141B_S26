@@ -1,0 +1,6800 @@
+]0;Day15~/sta141b/Public/Day15> ls
+ Egs.md     Outline.md       cityData.R    cookie     flights.R  'www.flightaware.com_Archive [26-05-15 19-55-30].har'
+ IATA.rds   airportCodes.R   cityData.R~   flight.R   funs.R
+]0;Day15~/sta141b/Public/Day15> R
+
+R Under development (unstable) (2025-03-26 r88055) -- "Unsuffered Consequences"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: aarch64-apple-darwin23.6.0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+PID = 49053 
+Time = 2026-05-19 10:29:38 
+Dir = /Users/duncan/Classes/Davis/STA141B_Spring26/Public/Day15 
+1> library(HAR)
+[58:02] 2> h = readHAR("www.marinetraffic.com_Archive [26-05-19 10-56-00].har")
+Error in file(con, "r") : cannot open the connection
+
+Enter a frame number, or 0 to exit   
+
+ 1: readHAR("www.marinetraffic.com_Archive [26-05-19 10-56-00].har")
+ 2: fromJSON(file)
+ 3: fromJSON(file)
+ 4: I(suppressWarnings(paste(readLines(content), collapse = "\n")))
+ 5: unique.default(c("AsIs", oldClass(x)))
+ 6: suppressWarnings(paste(readLines(content), collapse = "\n"))
+ 7: withCallingHandlers(expr, warning = function(w) if (inherits(w, classes)) tryInvokeRestart("muffleWarning"))
+ 8: paste(readLines(content), collapse = "\n")
+ 9: readLines(content)
+10: file(con, "r")
+
+Selection: 0
+[58:02] 2> h = readHAR("../../www.marinetraffic.com_Archive [26-05-19 10-56-00].har")
+[58:28] 3> class(h)
+[1] "data.frame"
+[00:19] 4> dim(h)
+[1] 218  38
+[00:23] 5> names(h)
+ [1] "connection"                "content"                   "httpVersion"               "method"                   
+ [5] "mimeType"                  "pageref"                   "responseEncoding"          "responseHttpVersion"      
+ [9] "responseRedirectURL"       "responseStatusText"        "serverIPAddress"           "startedDateTime"          
+[13] "url"                       "X_securityState"           "X_blocked_queueing"        "blocked"                  
+[17] "bodySize"                  "connect"                   "dns"                       "headersSize"              
+[21] "receive"                   "responseBodySize"          "responseHeadersSize"       "responseStatus"           
+[25] "send"                      "ssl"                       "time"                      "wait"                     
+[29] "_workerFetchStart"         "_workerReady"              "_workerRespondWithSettled" "_workerStart"             
+[33] "postData"                  "queryString"               "requestCookies"            "requestHeaders"           
+[37] "responseCookies"           "responseHeaders"          
+[00:33] 6> sapply(h, class)
+*** output flushed ***
+[01:42] 7> options(width = 70)
+[01:47] 8> sapply(h, class)
+*** output flushed ***
+[01:48] 9> grep("get_data_json", h$url)
+ [1] 105 106 107 108 109 110 111 112 113 114 115 127 187 188 189 190
+[17] 191 192 195 196 197 202 203 204 205 206 210 211
+[02:22] 10> i = grep("get_data_json", h$url)
+[02:31] 11> table(h$url[i])
+*** output flushed ***
+[02:37] 12> u = unique(h$url[i])
+[03:36] 13> u
+ [1] "https://www.marinetraffic.com/getData/get_data_json_4/z:4/X:3/Y:3/station:0"
+ [2] "https://www.marinetraffic.com/getData/get_data_json_4/z:4/X:4/Y:3/station:0"
+ [3] "https://www.marinetraffic.com/getData/get_data_json_4/z:4/X:3/Y:2/station:0"
+ [4] "https://www.marinetraffic.com/getData/get_data_json_4/z:4/X:4/Y:2/station:0"
+ [5] "https://www.marinetraffic.com/getData/get_data_json_4/z:4/X:3/Y:4/station:0"
+ [6] "https://www.marinetraffic.com/getData/get_data_json_4/z:4/X:4/Y:4/station:0"
+ [7] "https://www.marinetraffic.com/getData/get_data_json_4/z:4/X:2/Y:3/station:0"
+ [8] "https://www.marinetraffic.com/getData/get_data_json_4/z:4/X:5/Y:3/station:0"
+ [9] "https://www.marinetraffic.com/getData/get_data_json_4/z:4/X:2/Y:2/station:0"
+[10] "https://www.marinetraffic.com/getData/get_data_json_4/z:4/X:5/Y:2/station:0"
+[11] "https://www.marinetraffic.com/getData/get_data_json_4/z:4/X:2/Y:4/station:0"
+[12] "https://www.marinetraffic.com/getData/get_data_json_4/z:4/X:5/Y:4/station:0"
+[13] "https://www.marinetraffic.com/getData/get_data_json_4/z:3/X:2/Y:1/station:0"
+[14] "https://www.marinetraffic.com/getData/get_data_json_4/z:3/X:2/Y:2/station:0"
+[15] "https://www.marinetraffic.com/getData/get_data_json_4/z:3/X:1/Y:1/station:0"
+[16] "https://www.marinetraffic.com/getData/get_data_json_4/z:3/X:3/Y:1/station:0"
+[17] "https://www.marinetraffic.com/getData/get_data_json_4/z:3/X:1/Y:2/station:0"
+[18] "https://www.marinetraffic.com/getData/get_data_json_4/z:3/X:3/Y:2/station:0"
+[19] "https://www.marinetraffic.com/getData/get_data_json_4/z:3/X:0/Y:1/station:0"
+[20] "https://www.marinetraffic.com/getData/get_data_json_4/z:3/X:0/Y:2/station:0"
+[21] "https://www.marinetraffic.com/getData/get_data_json_4/z:2/X:1/Y:0/station:0"
+[22] "https://www.marinetraffic.com/getData/get_data_json_4/z:2/X:1/Y:1/station:0"
+[23] "https://www.marinetraffic.com/getData/get_data_json_4/z:2/X:0/Y:0/station:0"
+[24] "https://www.marinetraffic.com/getData/get_data_json_4/z:2/X:0/Y:1/station:0"
+[03:39] 14> i
+ [1] 105 106 107 108 109 110 111 112 113 114 115 127 187 188 189 190
+[17] 191 192 195 196 197 202 203 204 205 206 210 211
+[03:52] 15> class(h$content[ i[1] ])
+[1] "character"
+[04:08] 16> nchar(h$content[ i[1] ])
+[1] 618596
+[04:17] 17> h$responseHeaders[[ i[1] ]]
+*** output flushed ***
+[04:30] 18> substring(h$content[ i[1] ], 1, 1000)
+[1] "{\"type\":1,\"data\":{\"rows\":[{\"LAT\":\"-2.04161\",\"LON\":\"-44.05394\",\"SPEED\":\"1\",\"COURSE\":\"277\",\"HEADING\":\"184\",\"ELAPSED\":\"17\",\"DESTINATION\":\"BRPMA\",\"FLAG\":\"MH\",\"LENGTH\":\"361\",\"ROT\":\"0\",\"SHIPNAME\":\"SEA TUBARAO\",\"SHIPTYPE\":\"7\",\"SHIP_ID\":\"714052\",\"WIDTH\":\"65\",\"L_FORE\":\"302\",\"W_LEFT\":\"24\",\"DWT\":\"403784\",\"GT_SHIPTYPE\":\"8\"},{\"LAT\":\"-2.5375383\",\"LON\":\"-38.282825\",\"SPEED\":\"80\",\"COURSE\":\"116\",\"HEADING\":\"119\",\"ELAPSED\":\"311\",\"DESTINATION\":\"CN DJK\",\"FLAG\":\"MH\",\"LENGTH\":\"360\",\"ROT\":\"0\",\"SHIPNAME\":\"LIWA MAX\",\"SHIPTYPE\":\"7\",\"SHIP_ID\":\"714026\",\"WIDTH\":\"65\",\"L_FORE\":\"325\",\"W_LEFT\":\"35\",\"DWT\":\"400314\",\"GT_SHIPTYPE\":\"8\"},{\"LAT\":\"-2.6949999\",\"LON\":\"-37.965\",\"SPEED\":\"60\",\"COURSE\":\"120\",\"HEADING\":null,\"ELAPSED\":\"23\",\"SHIPNAME\":\"[SAT-AIS]\",\"SHIPTYPE\":\"7\",\"SHIP_ID\":\"TmpRNE1ETTROalE0TURNNE5qUTRNQT09LXVxWk5Rbi9wMzhHZzlrWlUvWVY1cVE9PQ==\",\"TYPE_IMG\":\"7\",\"TYPE_NAME\":\"Cargo Vessel\",\"STATUS_NAME\":\"Underway using Engine\"},{\"LAT\":\"-1.9447317\",\"LON\":\"-40.582954\",\"SPEED\":\"145\",\"COURSE\":\"274\",\"HEADING\":null,\"ELAPSED\":\"773\",\"D"
+[05:34] 19> fromJSON(h$content[ i [ 1 ] ])
+Error in fromJSON(h$content[i[1]]) : could not find function "fromJSON"
+No suitable frames for recover()
+[05:34] 19> library(RJSONIO)
+[06:00] 20> j1 = fromJSON(h$content[ i [ 1 ] ])
+[06:07] 21> names(j1)
+[1] "type" "data"
+[06:31] 22> names(j1$data)
+[1] "rows"      "areaShips"
+[08:58] 23> names(j1$data$rows)
+NULL
+[09:04] 24> r = j1$data$rows
+[09:14] 25> r[[1]]
+          LAT           LON         SPEED        COURSE       HEADING 
+   "-2.04161"   "-44.05394"           "1"         "277"         "184" 
+      ELAPSED   DESTINATION          FLAG        LENGTH           ROT 
+         "17"       "BRPMA"          "MH"         "361"           "0" 
+     SHIPNAME      SHIPTYPE       SHIP_ID         WIDTH        L_FORE 
+"SEA TUBARAO"           "7"      "714052"          "65"         "302" 
+       W_LEFT           DWT   GT_SHIPTYPE 
+         "24"      "403784"           "8" 
+[09:21] 26> table(sapply(r, length))
+
+ 12  15  16  17  18 
+918 132  11 377 718 
+[10:03] 27> table(unlist(lapply(r, names)))
+
+     COURSE DESTINATION         DWT     ELAPSED        FLAG 
+       2156        1238        1093        2156        1240 
+GT_SHIPTYPE     HEADING      L_FORE         LAT      LENGTH 
+       1098        2156        1238        2156        1240 
+        LON         ROT     SHIP_ID    SHIPNAME    SHIPTYPE 
+       2156         728        2156        2156        2156 
+      SPEED STATUS_NAME    TYPE_IMG   TYPE_NAME      W_LEFT 
+       2156         916         916         916        1238 
+      WIDTH 
+       1240 
+[13:16] 28> length(r)
+[1] 2156
+[13:19] 29> tt = table(unlist(lapply(r, names)))
+[13:32] 30> tt[ tt = length(r)]
+<NA> 
+  NA 
+[13:38] 31> names(tt)[ tt == length(r)]
+[1] "COURSE"   "ELAPSED"  "HEADING"  "LAT"      "LON"      "SHIP_ID" 
+[7] "SHIPNAME" "SHIPTYPE" "SPEED"   
+[13:45] 32> tt[ tt != length(r)]
+
+DESTINATION         DWT        FLAG GT_SHIPTYPE      L_FORE 
+       1238        1093        1240        1098        1238 
+     LENGTH         ROT STATUS_NAME    TYPE_IMG   TYPE_NAME 
+       1240         728         916         916         916 
+     W_LEFT       WIDTH 
+       1238        1240 
+[13:58] 33> sapply(r, `[`, "SPEED")
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "80"
+
+$SPEED
+[1] "60"
+
+$SPEED
+[1] "145"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "37"
+
+$SPEED
+[1] "65"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "20"
+
+$SPEED
+[1] "2"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "93"
+
+$SPEED
+[1] "80"
+
+$SPEED
+[1] "24"
+
+$SPEED
+[1] "138"
+
+$SPEED
+[1] "135"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "30"
+
+$SPEED
+[1] "37"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "88"
+
+$SPEED
+[1] "70"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "25"
+
+$SPEED
+[1] "22"
+
+$SPEED
+[1] "20"
+
+$SPEED
+[1] "73"
+
+$SPEED
+[1] "74"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "10"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "202"
+
+$SPEED
+[1] "160"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "188"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "12"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "177"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "5"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "2"
+
+$SPEED
+[1] "2"
+
+$SPEED
+[1] "176"
+
+$SPEED
+[1] "178"
+
+$SPEED
+[1] "173"
+
+$SPEED
+[1] "145"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "188"
+
+$SPEED
+[1] "150"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "167"
+
+$SPEED
+[1] "190"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "2"
+
+$SPEED
+[1] "193"
+
+$SPEED
+[1] "188"
+
+$SPEED
+[1] "203"
+
+$SPEED
+[1] "188"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "150"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "188"
+
+$SPEED
+[1] "173"
+
+$SPEED
+[1] "156"
+
+$SPEED
+[1] "196"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "18"
+
+$SPEED
+[1] "190"
+
+$SPEED
+[1] "170"
+
+$SPEED
+[1] "163"
+
+$SPEED
+[1] "176"
+
+$SPEED
+[1] "143"
+
+$SPEED
+[1] "172"
+
+$SPEED
+[1] "167"
+
+$SPEED
+[1] "176"
+
+$SPEED
+[1] "171"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "136"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "187"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "3"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "45"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "138"
+
+$SPEED
+[1] "138"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "2"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "125"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "91"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "12"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "162"
+
+$SPEED
+[1] "162"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "170"
+
+$SPEED
+[1] "186"
+
+$SPEED
+[1] "178"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "185"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "125"
+
+$SPEED
+[1] "187"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "141"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "141"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "10"
+
+$SPEED
+[1] "138"
+
+$SPEED
+[1] "10"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "143"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "136"
+
+$SPEED
+[1] "135"
+
+$SPEED
+[1] "5"
+
+$SPEED
+[1] "138"
+
+$SPEED
+[1] "83"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "141"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "10"
+
+$SPEED
+[1] "83"
+
+$SPEED
+[1] "60"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "138"
+
+$SPEED
+[1] "125"
+
+$SPEED
+[1] "135"
+
+$SPEED
+[1] "172"
+
+$SPEED
+[1] "170"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "163"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "178"
+
+$SPEED
+[1] "183"
+
+$SPEED
+[1] "187"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "202"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "155"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "156"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "6"
+
+$SPEED
+[1] "183"
+
+$SPEED
+[1] "178"
+
+$SPEED
+[1] "180"
+
+$SPEED
+[1] "177"
+
+$SPEED
+[1] "176"
+
+$SPEED
+[1] "173"
+
+$SPEED
+[1] "158"
+
+$SPEED
+[1] "146"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "177"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "155"
+
+$SPEED
+[1] "153"
+
+$SPEED
+[1] "167"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "145"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "141"
+
+$SPEED
+[1] "160"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "162"
+
+$SPEED
+[1] "160"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "69"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "95"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "59"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "75"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "91"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "136"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "183"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "125"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "78"
+
+$SPEED
+[1] "68"
+
+$SPEED
+[1] "83"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "145"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "3"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "80"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "138"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "125"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "68"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "180"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "3"
+
+$SPEED
+[1] "141"
+
+$SPEED
+[1] "150"
+
+$SPEED
+[1] "188"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "143"
+
+$SPEED
+[1] "143"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "155"
+
+$SPEED
+[1] "146"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "181"
+
+$SPEED
+[1] "190"
+
+$SPEED
+[1] "58"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "170"
+
+$SPEED
+[1] "171"
+
+$SPEED
+[1] "93"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "173"
+
+$SPEED
+[1] "170"
+
+$SPEED
+[1] "155"
+
+$SPEED
+[1] "222"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "150"
+
+$SPEED
+[1] "141"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "145"
+
+$SPEED
+[1] "173"
+
+$SPEED
+[1] "37"
+
+$SPEED
+[1] "168"
+
+$SPEED
+[1] "187"
+
+$SPEED
+[1] "185"
+
+$SPEED
+[1] "155"
+
+$SPEED
+[1] "180"
+
+$SPEED
+[1] "171"
+
+$SPEED
+[1] "177"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "146"
+
+$SPEED
+[1] "150"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "160"
+
+$SPEED
+[1] "150"
+
+$SPEED
+[1] "170"
+
+$SPEED
+[1] "150"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "181"
+
+$SPEED
+[1] "178"
+
+$SPEED
+[1] "183"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "156"
+
+$SPEED
+[1] "153"
+
+$SPEED
+[1] "180"
+
+$SPEED
+[1] "176"
+
+$SPEED
+[1] "4"
+
+$SPEED
+[1] "191"
+
+$SPEED
+[1] "195"
+
+$SPEED
+[1] "158"
+
+$SPEED
+[1] "150"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "192"
+
+$SPEED
+[1] "95"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "141"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "177"
+
+$SPEED
+[1] "171"
+
+$SPEED
+[1] "163"
+
+$SPEED
+[1] "170"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "177"
+
+$SPEED
+[1] "170"
+
+$SPEED
+[1] "167"
+
+$SPEED
+[1] "85"
+
+$SPEED
+[1] "95"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "160"
+
+$SPEED
+[1] "146"
+
+$SPEED
+[1] "160"
+
+$SPEED
+[1] "135"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "161"
+
+$SPEED
+[1] "148"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "180"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "170"
+
+$SPEED
+[1] "138"
+
+$SPEED
+[1] "65"
+
+$SPEED
+[1] "160"
+
+$SPEED
+[1] "76"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "150"
+
+$SPEED
+[1] "181"
+
+$SPEED
+[1] "167"
+
+$SPEED
+[1] "160"
+
+$SPEED
+[1] "170"
+
+$SPEED
+[1] "160"
+
+$SPEED
+[1] "162"
+
+$SPEED
+[1] "160"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "180"
+
+$SPEED
+[1] "180"
+
+$SPEED
+[1] "160"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "170"
+
+$SPEED
+[1] "160"
+
+$SPEED
+[1] "148"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "185"
+
+$SPEED
+[1] "187"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "166"
+
+$SPEED
+[1] "196"
+
+$SPEED
+[1] "170"
+
+$SPEED
+[1] "176"
+
+$SPEED
+[1] "151"
+
+$SPEED
+[1] "150"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "165"
+
+$SPEED
+[1] "76"
+
+$SPEED
+[1] "86"
+
+$SPEED
+[1] "70"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "163"
+
+$SPEED
+[1] "188"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "170"
+
+$SPEED
+[1] "171"
+
+$SPEED
+[1] "55"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "158"
+
+$SPEED
+[1] "160"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "86"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "141"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "93"
+
+$SPEED
+[1] "81"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "86"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "70"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "173"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "85"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "70"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "93"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "91"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "8"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "80"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "70"
+
+$SPEED
+[1] "71"
+
+$SPEED
+[1] "83"
+
+$SPEED
+[1] "93"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "148"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "85"
+
+$SPEED
+[1] "156"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "95"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "153"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "151"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "192"
+
+$SPEED
+[1] "190"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "95"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "162"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "34"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "143"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "45"
+
+$SPEED
+[1] "78"
+
+$SPEED
+[1] "50"
+
+$SPEED
+[1] "50"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "151"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "45"
+
+$SPEED
+[1] "136"
+
+$SPEED
+[1] "136"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "163"
+
+$SPEED
+[1] "161"
+
+$SPEED
+[1] "162"
+
+$SPEED
+[1] "125"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "150"
+
+$SPEED
+[1] "143"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "3"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "195"
+
+$SPEED
+[1] "148"
+
+$SPEED
+[1] "163"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "8"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "11"
+
+$SPEED
+[1] "158"
+
+$SPEED
+[1] "125"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "20"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "17"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "93"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "80"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "10"
+
+$SPEED
+[1] "8"
+
+$SPEED
+[1] "11"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "172"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "138"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "125"
+
+$SPEED
+[1] "183"
+
+$SPEED
+[1] "181"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "86"
+
+$SPEED
+[1] "88"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "10"
+
+$SPEED
+[1] "16"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "4"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "160"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "177"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "150"
+
+$SPEED
+[1] "153"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "51"
+
+$SPEED
+[1] "160"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "148"
+
+$SPEED
+[1] "145"
+
+$SPEED
+[1] "86"
+
+$SPEED
+[1] "80"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "8"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "85"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "95"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "136"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "2"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "4"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "161"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "150"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "136"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "151"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "81"
+
+$SPEED
+[1] "146"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "85"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "153"
+
+$SPEED
+[1] "170"
+
+$SPEED
+[1] "143"
+
+$SPEED
+[1] "148"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "158"
+
+$SPEED
+[1] "156"
+
+$SPEED
+[1] "158"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "158"
+
+$SPEED
+[1] "20"
+
+$SPEED
+[1] "15"
+
+$SPEED
+[1] "91"
+
+$SPEED
+[1] "80"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "182"
+
+$SPEED
+[1] "190"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "165"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "125"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "125"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "143"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "15"
+
+$SPEED
+[1] "12"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "143"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "11"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "86"
+
+$SPEED
+[1] "86"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "91"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "138"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "136"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "156"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "136"
+
+$SPEED
+[1] "136"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "141"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "138"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "136"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "143"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "2"
+
+$SPEED
+[1] "6"
+
+$SPEED
+[1] "6"
+
+$SPEED
+[1] "125"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "160"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "171"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "143"
+
+$SPEED
+[1] "141"
+
+$SPEED
+[1] "161"
+
+$SPEED
+[1] "160"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "68"
+
+$SPEED
+[1] "177"
+
+$SPEED
+[1] "170"
+
+$SPEED
+[1] "11"
+
+$SPEED
+[1] "166"
+
+$SPEED
+[1] "160"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "81"
+
+$SPEED
+[1] "75"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "192"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "151"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "136"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "55"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "155"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "136"
+
+$SPEED
+[1] "125"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "135"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "88"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "2"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "125"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "80"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "85"
+
+$SPEED
+[1] "68"
+
+$SPEED
+[1] "81"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "13"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "168"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "75"
+
+$SPEED
+[1] "40"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "146"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "135"
+
+$SPEED
+[1] "93"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "12"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "173"
+
+$SPEED
+[1] "163"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "138"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "160"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "8"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "148"
+
+$SPEED
+[1] "150"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "165"
+
+$SPEED
+[1] "167"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "70"
+
+$SPEED
+[1] "163"
+
+$SPEED
+[1] "170"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "143"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "80"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "60"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "151"
+
+$SPEED
+[1] "153"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "146"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "158"
+
+$SPEED
+[1] "170"
+
+$SPEED
+[1] "153"
+
+$SPEED
+[1] "150"
+
+$SPEED
+[1] "160"
+
+$SPEED
+[1] "172"
+
+$SPEED
+[1] "171"
+
+$SPEED
+[1] "148"
+
+$SPEED
+[1] "148"
+
+$SPEED
+[1] "156"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "156"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "141"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "143"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "17"
+
+$SPEED
+[1] "75"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "16"
+
+$SPEED
+[1] "176"
+
+$SPEED
+[1] "170"
+
+$SPEED
+[1] "148"
+
+$SPEED
+[1] "136"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "88"
+
+$SPEED
+[1] "161"
+
+$SPEED
+[1] "171"
+
+$SPEED
+[1] "177"
+
+$SPEED
+[1] "155"
+
+$SPEED
+[1] "156"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "161"
+
+$SPEED
+[1] "153"
+
+$SPEED
+[1] "168"
+
+$SPEED
+[1] "75"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "176"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "138"
+
+$SPEED
+[1] "177"
+
+$SPEED
+[1] "170"
+
+$SPEED
+[1] "155"
+
+$SPEED
+[1] "153"
+
+$SPEED
+[1] "177"
+
+$SPEED
+[1] "170"
+
+$SPEED
+[1] "138"
+
+$SPEED
+[1] "145"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "4"
+
+$SPEED
+[1] "93"
+
+$SPEED
+[1] "91"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "135"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "136"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "150"
+
+$SPEED
+[1] "138"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "187"
+
+$SPEED
+[1] "192"
+
+$SPEED
+[1] "182"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "145"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "141"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "65"
+
+$SPEED
+[1] "151"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "148"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "125"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "155"
+
+$SPEED
+[1] "146"
+
+$SPEED
+[1] "158"
+
+$SPEED
+[1] "143"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "74"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "173"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "150"
+
+$SPEED
+[1] "170"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "172"
+
+$SPEED
+[1] "180"
+
+$SPEED
+[1] "170"
+
+$SPEED
+[1] "162"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "167"
+
+$SPEED
+[1] "198"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "173"
+
+$SPEED
+[1] "168"
+
+$SPEED
+[1] "146"
+
+$SPEED
+[1] "163"
+
+$SPEED
+[1] "150"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "153"
+
+$SPEED
+[1] "4"
+
+$SPEED
+[1] "70"
+
+$SPEED
+[1] "80"
+
+$SPEED
+[1] "153"
+
+$SPEED
+[1] "150"
+
+$SPEED
+[1] "153"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "86"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "173"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "148"
+
+$SPEED
+[1] "187"
+
+$SPEED
+[1] "153"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "158"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "136"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "153"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "172"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "151"
+
+$SPEED
+[1] "133"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "3"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "2"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "125"
+
+$SPEED
+[1] "151"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "160"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "125"
+
+$SPEED
+[1] "165"
+
+$SPEED
+[1] "151"
+
+$SPEED
+[1] "172"
+
+$SPEED
+[1] "138"
+
+$SPEED
+[1] "178"
+
+$SPEED
+[1] "181"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "12"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "46"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "187"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "18"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "125"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "143"
+
+$SPEED
+[1] "151"
+
+$SPEED
+[1] "143"
+
+$SPEED
+[1] "146"
+
+$SPEED
+[1] "138"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "5"
+
+$SPEED
+[1] "156"
+
+$SPEED
+[1] "150"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "3"
+
+$SPEED
+[1] "70"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "141"
+
+$SPEED
+[1] "143"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "143"
+
+$SPEED
+[1] "93"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "15"
+
+$SPEED
+[1] "86"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "125"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "141"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "138"
+
+$SPEED
+[1] "95"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "13"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "55"
+
+$SPEED
+[1] "70"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "18"
+
+$SPEED
+[1] "76"
+
+$SPEED
+[1] "95"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "2"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "11"
+
+$SPEED
+[1] "6"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "80"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "172"
+
+$SPEED
+[1] "176"
+
+$SPEED
+[1] "141"
+
+$SPEED
+[1] "3"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "91"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "70"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "136"
+
+$SPEED
+[1] "83"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "95"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "153"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "80"
+
+$SPEED
+[1] "176"
+
+$SPEED
+[1] "74"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "165"
+
+$SPEED
+[1] "17"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "76"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "70"
+
+$SPEED
+[1] "10"
+
+$SPEED
+[1] "80"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "80"
+
+$SPEED
+[1] "88"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "39"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "95"
+
+$SPEED
+[1] "65"
+
+$SPEED
+[1] "85"
+
+$SPEED
+[1] "40"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "81"
+
+$SPEED
+[1] "70"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "86"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "88"
+
+$SPEED
+[1] "41"
+
+$SPEED
+[1] "83"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "95"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "2"
+
+$SPEED
+[1] "83"
+
+$SPEED
+[1] "136"
+
+$SPEED
+[1] "8"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "111"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "55"
+
+$SPEED
+[1] "60"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "131"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "320"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "126"
+
+$SPEED
+[1] "70"
+
+$SPEED
+[1] "39"
+
+$SPEED
+[1] "48"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "78"
+
+$SPEED
+[1] "8"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "337"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "121"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "20"
+
+$SPEED
+[1] "3"
+
+$SPEED
+[1] "86"
+
+$SPEED
+[1] "105"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "50"
+
+$SPEED
+[1] "6"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "116"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "88"
+
+$SPEED
+[1] "86"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "2"
+
+$SPEED
+[1] "140"
+
+$SPEED
+[1] "153"
+
+$SPEED
+[1] "160"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "93"
+
+$SPEED
+[1] "160"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "150"
+
+$SPEED
+[1] "34"
+
+$SPEED
+[1] "40"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "63"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "35"
+
+$SPEED
+[1] "61"
+
+$SPEED
+[1] "30"
+
+$SPEED
+[1] "50"
+
+$SPEED
+[1] "85"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "65"
+
+$SPEED
+[1] "136"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "45"
+
+$SPEED
+[1] "40"
+
+$SPEED
+[1] "55"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "27"
+
+$SPEED
+[1] "83"
+
+$SPEED
+[1] "80"
+
+$SPEED
+[1] "40"
+
+$SPEED
+[1] "40"
+
+$SPEED
+[1] "25"
+
+$SPEED
+[1] "27"
+
+$SPEED
+[1] "30"
+
+$SPEED
+[1] "118"
+
+$SPEED
+[1] "30"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "34"
+
+$SPEED
+[1] "34"
+
+$SPEED
+[1] "30"
+
+$SPEED
+[1] "65"
+
+$SPEED
+[1] "70"
+
+$SPEED
+[1] "4"
+
+$SPEED
+[1] "40"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "39"
+
+$SPEED
+[1] "40"
+
+$SPEED
+[1] "75"
+
+$SPEED
+[1] "74"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "80"
+
+$SPEED
+[1] "25"
+
+$SPEED
+[1] "20"
+
+$SPEED
+[1] "27"
+
+$SPEED
+[1] "25"
+
+$SPEED
+[1] "70"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "13"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "2"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "130"
+
+$SPEED
+[1] "76"
+
+$SPEED
+[1] "48"
+
+$SPEED
+[1] "30"
+
+$SPEED
+[1] "53"
+
+$SPEED
+[1] "155"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "71"
+
+$SPEED
+[1] "37"
+
+$SPEED
+[1] "40"
+
+$SPEED
+[1] "65"
+
+$SPEED
+[1] "30"
+
+$SPEED
+[1] "78"
+
+$SPEED
+[1] "65"
+
+$SPEED
+[1] "58"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "80"
+
+$SPEED
+[1] "5"
+
+$SPEED
+[1] "75"
+
+$SPEED
+[1] "79"
+
+$SPEED
+[1] "50"
+
+$SPEED
+[1] "123"
+
+$SPEED
+[1] "83"
+
+$SPEED
+NULL
+
+$SPEED
+NULL
+
+$SPEED
+[1] "113"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "29"
+
+$SPEED
+[1] "70"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "12"
+
+$SPEED
+[1] "35"
+
+$SPEED
+[1] "60"
+
+$SPEED
+[1] "35"
+
+$SPEED
+[1] "50"
+
+$SPEED
+[1] "73"
+
+$SPEED
+[1] "45"
+
+$SPEED
+[1] "50"
+
+$SPEED
+[1] "55"
+
+$SPEED
+[1] "74"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "55"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "40"
+
+$SPEED
+[1] "12"
+
+$SPEED
+[1] "69"
+
+$SPEED
+[1] "95"
+
+$SPEED
+[1] "40"
+
+$SPEED
+[1] "34"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "115"
+
+$SPEED
+[1] "61"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "65"
+
+$SPEED
+[1] "64"
+
+$SPEED
+[1] "79"
+
+$SPEED
+[1] "32"
+
+$SPEED
+[1] "83"
+
+$SPEED
+[1] "79"
+
+$SPEED
+[1] "29"
+
+$SPEED
+[1] "41"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "20"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "85"
+
+$SPEED
+[1] "80"
+
+$SPEED
+[1] "40"
+
+$SPEED
+[1] "30"
+
+$SPEED
+[1] "95"
+
+$SPEED
+[1] "40"
+
+$SPEED
+[1] "60"
+
+$SPEED
+[1] "32"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "27"
+
+$SPEED
+[1] "29"
+
+$SPEED
+NULL
+
+$SPEED
+[1] "32"
+
+$SPEED
+[1] "80"
+
+$SPEED
+[1] "45"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "60"
+
+$SPEED
+[1] "60"
+
+$SPEED
+[1] "60"
+
+$SPEED
+[1] "60"
+
+$SPEED
+[1] "39"
+
+$SPEED
+[1] "79"
+
+$SPEED
+[1] "29"
+
+$SPEED
+[1] "10"
+
+$SPEED
+[1] "61"
+
+$SPEED
+[1] "63"
+
+$SPEED
+NULL
+
+$SPEED
+[1] "37"
+
+$SPEED
+[1] "4"
+
+$SPEED
+[1] "51"
+
+$SPEED
+[1] "93"
+
+$SPEED
+[1] "45"
+
+$SPEED
+[1] "83"
+
+$SPEED
+[1] "3"
+
+$SPEED
+NULL
+
+$SPEED
+[1] "49"
+
+$SPEED
+NULL
+
+$SPEED
+[1] "53"
+
+$SPEED
+NULL
+
+$SPEED
+NULL
+
+$SPEED
+[1] "370"
+
+$SPEED
+[1] "71"
+
+$SPEED
+[1] "79"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "91"
+
+$SPEED
+[1] "2"
+
+$SPEED
+[1] "60"
+
+$SPEED
+[1] "35"
+
+$SPEED
+[1] "1"
+
+$SPEED
+[1] "55"
+
+$SPEED
+[1] "53"
+
+$SPEED
+[1] "45"
+
+$SPEED
+[1] "46"
+
+$SPEED
+[1] "50"
+
+$SPEED
+[1] "61"
+
+$SPEED
+[1] "73"
+
+$SPEED
+[1] "86"
+
+$SPEED
+[1] "45"
+
+$SPEED
+[1] "81"
+
+$SPEED
+[1] "27"
+
+$SPEED
+[1] "35"
+
+$SPEED
+[1] "20"
+
+$SPEED
+[1] "5"
+
+$SPEED
+[1] "63"
+
+$SPEED
+[1] "30"
+
+$SPEED
+[1] "32"
+
+$SPEED
+[1] "17"
+
+$SPEED
+[1] "4"
+
+$SPEED
+[1] "35"
+
+$SPEED
+[1] "55"
+
+$SPEED
+[1] "66"
+
+$SPEED
+[1] "60"
+
+$SPEED
+[1] "63"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "8"
+
+$SPEED
+[1] "8"
+
+$SPEED
+[1] "30"
+
+$SPEED
+[1] "13"
+
+$SPEED
+[1] "40"
+
+$SPEED
+[1] "6"
+
+$SPEED
+[1] "24"
+
+$SPEED
+[1] "65"
+
+$SPEED
+[1] "37"
+
+$SPEED
+[1] "59"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "51"
+
+$SPEED
+[1] "63"
+
+$SPEED
+[1] "63"
+
+$SPEED
+[1] "128"
+
+$SPEED
+[1] "120"
+
+$SPEED
+[1] "49"
+
+$SPEED
+[1] "63"
+
+$SPEED
+[1] "65"
+
+$SPEED
+[1] "45"
+
+$SPEED
+[1] "63"
+
+$SPEED
+[1] "65"
+
+$SPEED
+[1] "74"
+
+$SPEED
+[1] "79"
+
+$SPEED
+[1] "13"
+
+$SPEED
+[1] "85"
+
+$SPEED
+[1] "76"
+
+$SPEED
+[1] "79"
+
+$SPEED
+[1] "30"
+
+$SPEED
+[1] "75"
+
+$SPEED
+[1] "59"
+
+$SPEED
+[1] "22"
+
+$SPEED
+[1] "64"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "202"
+
+$SPEED
+[1] "13"
+
+$SPEED
+[1] "45"
+
+$SPEED
+[1] "50"
+
+$SPEED
+[1] "55"
+
+$SPEED
+[1] "101"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "73"
+
+$SPEED
+[1] "80"
+
+$SPEED
+[1] "11"
+
+$SPEED
+[1] "10"
+
+$SPEED
+[1] "64"
+
+$SPEED
+[1] "85"
+
+$SPEED
+[1] "37"
+
+$SPEED
+[1] "39"
+
+$SPEED
+[1] "45"
+
+$SPEED
+[1] "49"
+
+$SPEED
+[1] "65"
+
+$SPEED
+[1] "24"
+
+$SPEED
+[1] "65"
+
+$SPEED
+[1] "48"
+
+$SPEED
+[1] "54"
+
+$SPEED
+[1] "25"
+
+$SPEED
+[1] "58"
+
+$SPEED
+[1] "59"
+
+$SPEED
+[1] "17"
+
+$SPEED
+[1] "5"
+
+$SPEED
+[1] "25"
+
+$SPEED
+[1] "50"
+
+$SPEED
+[1] "65"
+
+$SPEED
+[1] "40"
+
+$SPEED
+[1] "80"
+
+$SPEED
+[1] "70"
+
+$SPEED
+[1] "6"
+
+$SPEED
+[1] "12"
+
+$SPEED
+[1] "56"
+
+$SPEED
+[1] "79"
+
+$SPEED
+[1] "27"
+
+$SPEED
+[1] "35"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "65"
+
+$SPEED
+[1] "35"
+
+$SPEED
+[1] "65"
+
+$SPEED
+[1] "41"
+
+$SPEED
+[1] "17"
+
+$SPEED
+[1] "10"
+
+$SPEED
+[1] "86"
+
+$SPEED
+[1] "53"
+
+$SPEED
+[1] "66"
+
+$SPEED
+[1] "60"
+
+$SPEED
+[1] "12"
+
+$SPEED
+[1] "17"
+
+$SPEED
+[1] "2"
+
+$SPEED
+[1] "110"
+
+$SPEED
+[1] "32"
+
+$SPEED
+[1] "32"
+
+$SPEED
+[1] "32"
+
+$SPEED
+[1] "65"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "61"
+
+$SPEED
+[1] "81"
+
+$SPEED
+[1] "103"
+
+$SPEED
+[1] "83"
+
+$SPEED
+[1] "70"
+
+$SPEED
+[1] "8"
+
+$SPEED
+[1] "22"
+
+$SPEED
+[1] "70"
+
+$SPEED
+[1] "64"
+
+$SPEED
+[1] "86"
+
+$SPEED
+[1] "79"
+
+$SPEED
+[1] "81"
+
+$SPEED
+[1] "79"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "55"
+
+$SPEED
+[1] "2"
+
+$SPEED
+[1] "16"
+
+$SPEED
+[1] "39"
+
+$SPEED
+[1] "73"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "22"
+
+$SPEED
+[1] "39"
+
+$SPEED
+[1] "79"
+
+$SPEED
+[1] "83"
+
+$SPEED
+[1] "96"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "12"
+
+$SPEED
+[1] "20"
+
+$SPEED
+[1] "66"
+
+$SPEED
+[1] "83"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "106"
+
+$SPEED
+[1] "41"
+
+$SPEED
+[1] "17"
+
+$SPEED
+[1] "12"
+
+$SPEED
+[1] "68"
+
+$SPEED
+[1] "8"
+
+$SPEED
+[1] "30"
+
+$SPEED
+[1] "75"
+
+$SPEED
+[1] "11"
+
+$SPEED
+[1] "6"
+
+$SPEED
+[1] "10"
+
+$SPEED
+[1] "45"
+
+$SPEED
+[1] "35"
+
+$SPEED
+[1] "12"
+
+$SPEED
+[1] "10"
+
+$SPEED
+[1] "46"
+
+$SPEED
+[1] "76"
+
+$SPEED
+[1] "17"
+
+$SPEED
+[1] "13"
+
+$SPEED
+[1] "79"
+
+$SPEED
+[1] "6"
+
+$SPEED
+[1] "55"
+
+$SPEED
+[1] "32"
+
+$SPEED
+[1] "53"
+
+$SPEED
+[1] "76"
+
+$SPEED
+[1] "60"
+
+$SPEED
+[1] "56"
+
+$SPEED
+[1] "55"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "2"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "45"
+
+$SPEED
+[1] "2"
+
+$SPEED
+[1] "4"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "40"
+
+$SPEED
+[1] "78"
+
+$SPEED
+[1] "48"
+
+$SPEED
+[1] "17"
+
+$SPEED
+[1] "41"
+
+$SPEED
+[1] "17"
+
+$SPEED
+[1] "6"
+
+$SPEED
+[1] "69"
+
+$SPEED
+[1] "65"
+
+$SPEED
+[1] "41"
+
+$SPEED
+[1] "65"
+
+$SPEED
+[1] "49"
+
+$SPEED
+[1] "69"
+
+$SPEED
+[1] "51"
+
+$SPEED
+[1] "17"
+
+$SPEED
+[1] "50"
+
+$SPEED
+[1] "40"
+
+$SPEED
+[1] "44"
+
+$SPEED
+[1] "46"
+
+$SPEED
+[1] "60"
+
+$SPEED
+[1] "50"
+
+$SPEED
+[1] "12"
+
+$SPEED
+[1] "32"
+
+$SPEED
+[1] "44"
+
+$SPEED
+[1] "66"
+
+$SPEED
+[1] "68"
+
+$SPEED
+[1] "58"
+
+$SPEED
+[1] "45"
+
+$SPEED
+[1] "30"
+
+$SPEED
+[1] "17"
+
+$SPEED
+[1] "22"
+
+$SPEED
+[1] "22"
+
+$SPEED
+[1] "50"
+
+$SPEED
+[1] "64"
+
+$SPEED
+[1] "46"
+
+$SPEED
+[1] "16"
+
+$SPEED
+[1] "45"
+
+$SPEED
+NULL
+
+$SPEED
+[1] "78"
+
+$SPEED
+[1] "51"
+
+$SPEED
+[1] "59"
+
+$SPEED
+[1] "66"
+
+$SPEED
+NULL
+
+$SPEED
+[1] "43"
+
+$SPEED
+[1] "48"
+
+$SPEED
+NULL
+
+$SPEED
+NULL
+
+$SPEED
+[1] "3"
+
+$SPEED
+[1] "108"
+
+$SPEED
+[1] "2"
+
+$SPEED
+NULL
+
+$SPEED
+[1] "74"
+
+$SPEED
+[1] "40"
+
+$SPEED
+[1] "37"
+
+$SPEED
+[1] "100"
+
+$SPEED
+[1] "50"
+
+$SPEED
+[1] "91"
+
+$SPEED
+[1] "35"
+
+$SPEED
+[1] "29"
+
+$SPEED
+[1] "70"
+
+$SPEED
+[1] "43"
+
+$SPEED
+[1] "98"
+
+$SPEED
+[1] "61"
+
+$SPEED
+[1] "90"
+
+$SPEED
+[1] "40"
+
+$SPEED
+[1] "13"
+
+$SPEED
+[1] "65"
+
+$SPEED
+[1] "65"
+
+$SPEED
+NULL
+
+$SPEED
+[1] "70"
+
+$SPEED
+[1] "55"
+
+$SPEED
+[1] "81"
+
+$SPEED
+[1] "63"
+
+$SPEED
+[1] "61"
+
+$SPEED
+[1] "70"
+
+$SPEED
+[1] "50"
+
+$SPEED
+[1] "50"
+
+$SPEED
+[1] "68"
+
+$SPEED
+[1] "37"
+
+$SPEED
+[1] "83"
+
+$SPEED
+[1] "60"
+
+$SPEED
+[1] "80"
+
+$SPEED
+[1] "27"
+
+$SPEED
+[1] "49"
+
+$SPEED
+[1] "54"
+
+$SPEED
+[1] "230"
+
+$SPEED
+[1] "91"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "35"
+
+$SPEED
+[1] "63"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "0"
+
+$SPEED
+[1] "45"
+
+$SPEED
+[1] "79"
+
+$SPEED
+[1] "66"
+
+$SPEED
+[1] "8"
+
+$SPEED
+[1] "6"
+
+$SPEED
+[1] "2"
+
+$SPEED
+[1] "27"
+
+$SPEED
+[1] "30"
+
+$SPEED
+[1] "50"
+
+$SPEED
+[1] "24"
+
+$SPEED
+[1] "55"
+
+$SPEED
+[1] "50"
+
+$SPEED
+[1] "3"
+
+$SPEED
+[1] "73"
+
+$SPEED
+[1] "65"
+
+$SPEED
+[1] "55"
+
+$SPEED
+[1] "45"
+
+$SPEED
+[1] "63"
+
+$SPEED
+[1] "37"
+
+$SPEED
+[1] "95"
+
+[15:33] 34> s = sapply(r, `[[`, "SPEED")
+[15:46] 35> class(s)
+[1] "list"
+[15:48] 36> table(sapply(s, length))
+
+   0    1 
+  14 2142 
+[15:53] 37> source("orNA.R")
+[17:27] 38> s = sapply(r, function(x) orNA(x[["SPEED"]]))
+[18:01] 39> class(s)
+[1] "character"
+[18:03] 40> table(is.na(s))
+
+FALSE  TRUE 
+ 2142    14 
+[18:21] 41> s = as.numeric(sapply(r, function(x) orNA(x[["SPEED"]])))
+[18:37] 42> s
+*** output flushed ***
+[18:39] 43> summary(s)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+   0.00   65.00  110.00   97.06  128.00  370.00      14 
+[18:43] 44> tt
+
+     COURSE DESTINATION         DWT     ELAPSED        FLAG 
+       2156        1238        1093        2156        1240 
+GT_SHIPTYPE     HEADING      L_FORE         LAT      LENGTH 
+       1098        2156        1238        2156        1240 
+        LON         ROT     SHIP_ID    SHIPNAME    SHIPTYPE 
+       2156         728        2156        2156        2156 
+      SPEED STATUS_NAME    TYPE_IMG   TYPE_NAME      W_LEFT 
+       2156         916         916         916        1238 
+      WIDTH 
+       1240 
+[20:51] 45> vars = names(tt)
+[21:04] 46> source("foo.R")
+[26:23] 47> fixMe(r[[1]], vars)
+       LAT       LON SPEED COURSE HEADING ELAPSED DESTINATION FLAG
+1 -2.04161 -44.05394     1    277     184      17       BRPMA   MH
+  LENGTH ROT    SHIPNAME SHIPTYPE SHIP_ID WIDTH L_FORE W_LEFT    DWT
+1    361   0 SEA TUBARAO        7  714052    65    302     24 403784
+  GT_SHIPTYPE STATUS_NAME TYPE_IMG TYPE_NAME
+1           8        <NA>     <NA>      <NA>
+[26:36] 48> r2 = lapply(r, fixMe, vars)
+[27:00] 49> table(sapply(r2, class))
+
+data.frame 
+      2156 
+[27:09] 50> table(sapply(r2, ncol))
+
+  21 
+2156 
+[27:16] 51> r3 = do.call(rbind, r2)
+[27:25] 52> names(r3)
+ [1] "LAT"         "LON"         "SPEED"       "COURSE"     
+ [5] "HEADING"     "ELAPSED"     "DESTINATION" "FLAG"       
+ [9] "LENGTH"      "ROT"         "SHIPNAME"    "SHIPTYPE"   
+[13] "SHIP_ID"     "WIDTH"       "L_FORE"      "W_LEFT"     
+[17] "DWT"         "GT_SHIPTYPE" "STATUS_NAME" "TYPE_IMG"   
+[21] "TYPE_NAME"  
+[29:18] 53> r3[1,]
+       LAT       LON SPEED COURSE HEADING ELAPSED DESTINATION FLAG
+1 -2.04161 -44.05394     1    277     184      17       BRPMA   MH
+  LENGTH ROT    SHIPNAME SHIPTYPE SHIP_ID WIDTH L_FORE W_LEFT    DWT
+1    361   0 SEA TUBARAO        7  714052    65    302     24 403784
+  GT_SHIPTYPE STATUS_NAME TYPE_IMG TYPE_NAME
+1           8        <NA>     <NA>      <NA>
+[29:24] 54> sapply(r3, class)
+        LAT         LON       SPEED      COURSE     HEADING 
+"character" "character" "character" "character" "character" 
+    ELAPSED DESTINATION        FLAG      LENGTH         ROT 
+"character" "character" "character" "character" "character" 
+   SHIPNAME    SHIPTYPE     SHIP_ID       WIDTH      L_FORE 
+"character" "character" "character" "character" "character" 
+     W_LEFT         DWT GT_SHIPTYPE STATUS_NAME    TYPE_IMG 
+"character" "character" "character" "character" "character" 
+  TYPE_NAME 
+"character" 
+[29:36] 55> with(r3, plot(LAT, LON))
+[30:18] 56> r3[,1]
+*** output flushed ***
+[30:33] 57> h$url[i]
+ [1] "https://www.marinetraffic.com/getData/get_data_json_4/z:4/X:3/Y:3/station:0"
+ [2] "https://www.marinetraffic.com/getData/get_data_json_4/z:4/X:4/Y:3/station:0"
+ [3] "https://www.marinetraffic.com/getData/get_data_json_4/z:4/X:3/Y:2/station:0"
+ [4] "https://www.marinetraffic.com/getData/get_data_json_4/z:4/X:4/Y:2/station:0"
+ [5] "https://www.marinetraffic.com/getData/get_data_json_4/z:4/X:3/Y:4/station:0"
+ [6] "https://www.marinetraffic.com/getData/get_data_json_4/z:4/X:4/Y:4/station:0"
+ [7] "https://www.marinetraffic.com/getData/get_data_json_4/z:4/X:2/Y:3/station:0"
+ [8] "https://www.marinetraffic.com/getData/get_data_json_4/z:4/X:5/Y:3/station:0"
+ [9] "https://www.marinetraffic.com/getData/get_data_json_4/z:4/X:2/Y:2/station:0"
+[10] "https://www.marinetraffic.com/getData/get_data_json_4/z:4/X:5/Y:2/station:0"
+[11] "https://www.marinetraffic.com/getData/get_data_json_4/z:4/X:2/Y:4/station:0"
+[12] "https://www.marinetraffic.com/getData/get_data_json_4/z:4/X:5/Y:4/station:0"
+[13] "https://www.marinetraffic.com/getData/get_data_json_4/z:3/X:2/Y:1/station:0"
+[14] "https://www.marinetraffic.com/getData/get_data_json_4/z:3/X:2/Y:2/station:0"
+[15] "https://www.marinetraffic.com/getData/get_data_json_4/z:3/X:1/Y:1/station:0"
+[16] "https://www.marinetraffic.com/getData/get_data_json_4/z:3/X:3/Y:1/station:0"
+[17] "https://www.marinetraffic.com/getData/get_data_json_4/z:3/X:1/Y:2/station:0"
+[18] "https://www.marinetraffic.com/getData/get_data_json_4/z:3/X:3/Y:2/station:0"
+[19] "https://www.marinetraffic.com/getData/get_data_json_4/z:3/X:0/Y:1/station:0"
+[20] "https://www.marinetraffic.com/getData/get_data_json_4/z:3/X:0/Y:2/station:0"
+[21] "https://www.marinetraffic.com/getData/get_data_json_4/z:2/X:1/Y:0/station:0"
+[22] "https://www.marinetraffic.com/getData/get_data_json_4/z:2/X:1/Y:1/station:0"
+[23] "https://www.marinetraffic.com/getData/get_data_json_4/z:2/X:0/Y:0/station:0"
+[24] "https://www.marinetraffic.com/getData/get_data_json_4/z:2/X:0/Y:0/station:0"
+[25] "https://www.marinetraffic.com/getData/get_data_json_4/z:2/X:0/Y:1/station:0"
+[26] "https://www.marinetraffic.com/getData/get_data_json_4/z:2/X:0/Y:1/station:0"
+[27] "https://www.marinetraffic.com/getData/get_data_json_4/z:2/X:1/Y:0/station:0"
+[28] "https://www.marinetraffic.com/getData/get_data_json_4/z:2/X:1/Y:1/station:0"
+[31:50] 58> txt = readLines("https://www.flightaware.com/ajax/ignoreall/aircraft_filter_types.rvt")
+[37:39] 59> class(txt)
+[1] "character"
+[37:48] 60> nchar(txt)
+[1] 14969
+[37:50] 61> substring(txt, 1, 100)
+[1] "[{\"id\":\"AT3T\",\"text\":\"AIR TRACTOR AT-402\"},{\"id\":\"AT5T\",\"text\":\"AIR TRACTOR AT-503\"},{\"id\":\"AT6T\",\"t"
+[38:12] 62> library(RCurl)
+[41:51] 63> txt = getURLContent("https://www.flightaware.com/ajax/ignoreall/aircraft_filter_types.rvt", verbose = TRUE)
+* Host www.flightaware.com:443 was resolved.
+* IPv6: (none)
+* IPv4: 104.18.37.179, 172.64.150.77
+*   Trying 104.18.37.179:443...
+* Connected to www.flightaware.com (104.18.37.179) port 443
+* ALPN: curl offers h2,http/1.1
+*  CAfile: /etc/ssl/cert.pem
+*  CApath: none
+* SSL connection using TLSv1.3 / AEAD-CHACHA20-POLY1305-SHA256 / [blank] / UNDEF
+* ALPN: server accepted h2
+* Server certificate:
+*  subject: CN=www.flightaware.com
+*  start date: May 15 23:51:15 2026 GMT
+*  expire date: Aug 14 00:51:13 2026 GMT
+*  subjectAltName: host "www.flightaware.com" matched cert's "www.flightaware.com"
+*  issuer: C=US; O=Google Trust Services; CN=WE1
+*  SSL certificate verify ok.
+* using HTTP/2
+* [HTTP/2] [1] OPENED stream for https://www.flightaware.com/ajax/ignoreall/aircraft_filter_types.rvt
+* [HTTP/2] [1] [:method: GET]
+* [HTTP/2] [1] [:scheme: https]
+* [HTTP/2] [1] [:authority: www.flightaware.com]
+* [HTTP/2] [1] [:path: /ajax/ignoreall/aircraft_filter_types.rvt]
+* [HTTP/2] [1] [accept: */*]
+> GET /ajax/ignoreall/aircraft_filter_types.rvt HTTP/2
+Host: www.flightaware.com
+Accept: */*
+
+* Request completely sent off
+< HTTP/2 200 
+< date: Tue, 19 May 2026 18:42:17 GMT
+< content-type: application/json
+< x-fa-backend: gudfy
+< cache-control: max-age=600
+< expires: Tue, 19 May 2026 18:35:46 GMT
+< x-frame-options: SAMEORIGIN
+< vary: Accept-Encoding
+< x-content-type-options: nosniff
+< strict-transport-security: max-age=31536000
+< trace-id: 00-48772ce46da74d66502fa99057a755b3-f0b3d104090472be-01
+< x-fa-cache: HIT
+< set-cookie: __cf_bm=C8OpYbbbnj.yeoyRcFC1rHWty8pHIZ5xUY6ORfrn020-1779216137.6866856-1.0.1.1-eiZep81Az1GcpAJimVOOkhzxV6_B6lnGbWwTAIPuXO_QqL.M3Yfg55ip1eTXCCF5LsiXCNCzaLUSy1YzdC9z6ufubDW0oGMlfD3FtRwhEE.nxRek1W5zfIVrd9o.9z5e; HttpOnly; Secure; Path=/; Domain=flightaware.com; Expires=Tue, 19 May 2026 19:12:17 GMT
+< age: 434
+< last-modified: Tue, 19 May 2026 18:35:10 GMT
+< cf-cache-status: HIT
+< server: cloudflare
+< cf-ray: 9fe53d9c89c4f46e-SJC
+< alt-svc: h3=":443"; ma=86400
+< 
+* Connection #0 to host www.flightaware.com left intact
+[42:17] 64> 
