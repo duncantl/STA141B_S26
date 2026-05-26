@@ -1,3 +1,4 @@
+
 library(XML)
 
 u0 = "https://www.city-data.com/"
@@ -53,9 +54,10 @@ u = getNodeSet(cit, "//descendant::table[position() = 9]//tr//descendant::td[2]/
 u = getNodeSet(cit, "((//table)[9]//tr//td[2])")
 u = getNodeSet(cit, "((//table)[9]//tr//td[2]//a/@href)")
 
+u = unlist(u)
 ucs = getRelativeURL(u, uc)
 #errors
-# javascript:1("Acalanes-Ridge")
+# javascript:l("Acalanes-Ridge")
 
 # So clean these
 # Some are regular URLs
@@ -65,9 +67,16 @@ ucs = getRelativeURL(u, uc)
 # Acalanes-Ridge maps to https://www.city-data.com/city/Acalanes-Ridge-California.html
 # So map javascript:1("Acalanes-Ridge") to https://www.city-data.com/city/Acalanes-Ridge-California.html
 
-gsub('javascript:1\\("([^"]+)"\\)', "\\1", u)
+
+u3 = gsub('javascript:l\\("([^"]+)"\\);', "\\1-California.html", u)
+ucs = getRelativeURL(u2, uc)
+
+# Have all the cities, not just the Bigger ones.
+# The Web page is dynamically displaying only the selected subset,
+# but the table contains the entire set of cities.
 
 
+###
 # For each city, get all the information
 
 
@@ -81,3 +90,46 @@ doc = htmlParse(readLines("https://www.city-data.com/city/Davis-California.html"
 
 s = getNodeSet(doc, "//section[@id]")
 sids = sapply(s, xmlGetAttr, "id")
+names(s) = sids
+
+z = s[["elevation"]]
+e = xmlValue(z, trim = TRUE)
+as.integer(gsub("Elevation:|feet", "", e))
+
+# alternatively
+e = xpathSApply(z, ".//p/text()", xmlValue)
+as.integer(gsub("feet", "", e))
+
+
+# 
+s[["city-population"]]
+
+s[["population-by-sex"]]
+
+s[["races-graph"]]
+
+
+
+# Can painstakingly go through each section and convert it.
+# Write functions to handle different cases.
+# Hopefully, can reuse these for similarly structured sections
+
+cbind(
+  f0(s[["elevation"]]),
+  f1(s[["city-population"]]),
+  f2(s[["population-by-sex"]]),
+  f1(s[["races-graph"]])
+  ...
+)
+
+
+# Alternatively, write code that recognizes the structure
+# e.g. procStructure()
+# Then can call 
+tmp = lapply(s, procSection)
+do.call(rbind, tmp)
+
+
+# Now to write procStructure()
+
+
