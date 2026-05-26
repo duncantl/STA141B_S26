@@ -1,0 +1,249 @@
+]0;Day17~/Classes/Davis/STA141B_Spring26/Public/Day17> R
+
+R Under development (unstable) (2025-03-26 r88055) -- "Unsuffered Consequences"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: aarch64-apple-darwin23.6.0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+PID = 52023 
+Time = 2026-05-26 10:55:55 
+Dir = /Users/duncan/Classes/Davis/STA141B_Spring26/Public/Day17 
+1> u = "https://www.city-data.com/city/California.html"
+[03:14] 2> ll = readLines(u)
+[05:37] 3> library(XML)
+[05:38] 4> doc = htmlParse(ll)
+[05:47] 5> tbl = readHTMLTable(doc, which = 9)
+[06:05] 6> head(tbl)
+  Map           Name Population
+1     Acalanes Ridge      1,137
+2             Acampo        341
+3          Acton, CA      7,596
+4           Adelanto     32,728
+5       Adin-Lookout        789
+6               Adin        272
+[06:09] 7> tbl = getNodeSet(doc, "//table")[[9]]
+[11:31] 8> class(tbl)
+[1] "XMLInternalElementNode" "XMLInternalNode"        "XMLAbstractNode"       
+[12:30] 9> xmlAttrs(tbl)
+                      class                          id 
+"tabBlue tblsort tblsticky"                   "cityTAB" 
+[12:48] 10> tbl = getNodeSet(doc, "//table[@id = 'cityTAB'")[[1]]
+XPath error : Invalid predicate
+Error in xpathApply.XMLInternalDocument(doc, path, fun, ..., namespaces = namespaces,  : 
+  error evaluating xpath expression //table[@id = 'cityTAB'
+
+Enter a frame number, or 0 to exit   
+
+1: getNodeSet(doc, "//table[@id = 'cityTAB'")
+2: xpathApply(doc, path, fun, ..., namespaces = namespaces, sessionEncoding = sessionEncoding, addFinalizer = addFinalizer)
+3: xpathApply.XMLInternalDocument(doc, path, fun, ..., namespaces = namespaces, sessionEncoding = sessionEncoding, addFinalizer = addFinalizer)
+
+Selection: 0
+[12:48] 10> tbl = getNodeSet(doc, "//table[@id = 'cityTAB']")[[1]]
+[16:35] 11> cat = readHTMLTable(doc, which = 9)
+[17:09] 12> dim(cat)
+[1] 1482    3
+[17:11] 13> length(getNodeSet(tbl, "//tr"))
+[1] 1535
+[17:45] 14> length(getNodeSet(tbl, ".//tr"))
+[1] 1483
+[17:56] 15> tr = getNodeSet(tbl, ".//tr")
+[19:47] 16> tr[[1]]
+<tr>
+  <th class="nosort" style="padding-left: 18px;">Map</th>
+  <th>
+    <h4>Name</h4>
+  </th>
+  <th>
+    <h4>Population</h4>
+  </th>
+</tr> 
+[19:49] 17> tr[[2]]
+<tr class="rS" id="0">
+  <td onclick="c(0);">
+    <p/>
+  </td>
+  <td>
+    <a href="javascript:l(&quot;Acalanes-Ridge&quot;);">Acalanes Ridge</a>
+  </td>
+  <td>1,137</td>
+</tr> 
+[19:58] 18> trd = getNodeSet(tbl, "(.//tr//td)[2]")
+[21:44] 19> length(trd)
+[1] 1
+[21:47] 20> trd = getNodeSet(tbl, "(.//tr//td)[2]/a")
+[24:21] 21> length(trd)
+[1] 1
+[24:24] 22> trd = getNodeSet(tbl, "(.//tr//td")
+XPath error : Invalid expression
+Error in xpathApply.XMLInternalDocument(ndoc, path, fun, ..., namespaces = namespaces,  : 
+  error evaluating xpath expression (.//tr//td
+
+Enter a frame number, or 0 to exit   
+
+1: getNodeSet(tbl, "(.//tr//td")
+2: xpathApply(doc, path, fun, ..., namespaces = namespaces, sessionEncoding = sessionEncoding, addFinalizer = addFinalizer)
+3: xpathApply.XMLInternalNode(doc, path, fun, ..., namespaces = namespaces, sessionEncoding = sessionEncoding, addFinalizer = addFinalizer)
+4: xpathApply.XMLInternalDocument(ndoc, path, fun, ..., namespaces = namespaces, resolveNamespaces = resolveNamespaces, .node = doc, addFinalizer = addFinalizer, xpathFuns = xpathFuns)
+
+Selection: 0
+[24:24] 22> trd = getNodeSet(tbl, ".//tr//td")
+[24:55] 23> length(trd)
+[1] 4446
+[24:57] 24> cit = doc
+[25:40] 25> u = getNodeSet(cit, "((//table)[9]//tr//td[2])")
+[25:44] 26> length(u)
+[1] 1482
+[25:45] 27> u2 = getNodeSet(cit, "((//table)[9]//tr//td[2]//a/@href)")
+[26:50] 28> length(u2)
+[1] 1482
+[26:52] 29> head(u2)
+[[1]]
+                               href 
+"javascript:l(\"Acalanes-Ridge\");" 
+attr(,"class")
+[1] "XMLAttributeValue"
+
+[[2]]
+                       href 
+"javascript:l(\"Acampo\");" 
+attr(,"class")
+[1] "XMLAttributeValue"
+
+[[3]]
+                   href 
+"Acton-California.html" 
+attr(,"class")
+[1] "XMLAttributeValue"
+
+[[4]]
+                      href 
+"Adelanto-California.html" 
+attr(,"class")
+[1] "XMLAttributeValue"
+
+[[5]]
+                             href 
+"javascript:l(\"Adin-Lookout\");" 
+attr(,"class")
+[1] "XMLAttributeValue"
+
+[[6]]
+                     href 
+"javascript:l(\"Adin\");" 
+attr(,"class")
+[1] "XMLAttributeValue"
+
+[31:52] 30> u2 = unlist(u2)
+[35:40] 31> head(u2)
+                               href                                href                                href                                href                                href                                href 
+"javascript:l(\"Acalanes-Ridge\");"         "javascript:l(\"Acampo\");"             "Acton-California.html"          "Adelanto-California.html"   "javascript:l(\"Adin-Lookout\");"           "javascript:l(\"Adin\");" 
+[35:43] 32> options(width = 70)
+[35:55] 33> head(u2)
+                               href 
+"javascript:l(\"Acalanes-Ridge\");" 
+                               href 
+        "javascript:l(\"Acampo\");" 
+                               href 
+            "Acton-California.html" 
+                               href 
+         "Adelanto-California.html" 
+                               href 
+  "javascript:l(\"Adin-Lookout\");" 
+                               href 
+          "javascript:l(\"Adin\");" 
+[35:57] 34> u3 = gsub('javascript:l\\("([^"]+)"\\);', "\\1-California.html", u)
+[37:56] 35> head(u3)
+[1] "<pointer: 0x600002a68480>" "<pointer: 0x600002a68a80>"
+[3] "<pointer: 0x600002a69080>" "<pointer: 0x600002a69800>"
+[5] "<pointer: 0x600002a69f80>" "<pointer: 0x600002a6a700>"
+[37:59] 36> u3 = gsub('javascript:l\\("([^"]+)"\\);', "\\1-California.html", u2)
+[38:12] 37> head(u3)
+                            href                             href 
+"Acalanes-Ridge-California.html"         "Acampo-California.html" 
+                            href                             href 
+         "Acton-California.html"       "Adelanto-California.html" 
+                            href                             href 
+  "Adin-Lookout-California.html"           "Adin-California.html" 
+[38:14] 38> uc = "https://www.city-data.com/city/California.html"
+[38:39] 39> cityURLs = getRelativeURL(u3, uc)
+[39:10] 40> head(cityURLs)
+                                                           href 
+"https://www.city-data.com/city/Acalanes-Ridge-California.html" 
+                                                           href 
+        "https://www.city-data.com/city/Acampo-California.html" 
+                                                           href 
+         "https://www.city-data.com/city/Acton-California.html" 
+                                                           href 
+      "https://www.city-data.com/city/Adelanto-California.html" 
+                                                           href 
+  "https://www.city-data.com/city/Adin-Lookout-California.html" 
+                                                           href 
+          "https://www.city-data.com/city/Adin-California.html" 
+[39:14] 41> ua = "https://www.city-data.com/city/Adin-California.html"
+[46:58] 42> da  = htmlParse(readLines("https://www.city-data.com/city/Adin-California.html"))
+[47:15] 43> secs = getNodeSet(da, "//section")
+[47:26] 44> length(secs)
+[1] 59
+[47:31] 45> sids = unlist(getNodeSet(da, "//section/@id"))
+[48:07] 46> sids
+*** output flushed ***
+[48:08] 47> sids = unames(unlist(getNodeSet(da, "//section/@id"))0
+Error: unexpected numeric constant in "sids = unames(unlist(getNodeSet(da, "//section/@id"))0"
+No suitable frames for recover()
+[48:08] 47> sids = unames(unlist(getNodeSet(da, "//section/@id")))
+Error in unames(unlist(getNodeSet(da, "//section/@id"))) : 
+  could not find function "unames"
+No suitable frames for recover()
+[48:08] 47> sids = uname(unlist(getNodeSet(da, "//section/@id")))
+Error in uname(unlist(getNodeSet(da, "//section/@id"))) : 
+  could not find function "uname"
+No suitable frames for recover()
+[48:08] 47> sids = unname(unlist(getNodeSet(da, "//section/@id")))
+[48:46] 48> sids
+ [1] "direct-ad1"                    "close-map"                    
+ [3] "city-population"               "population-by-sex"            
+ [5] "median-age"                    "zip-codes"                    
+ [7] "median-income"                 "direct-ad2"                   
+ [9] "cost-of-living-index"          "poverty-level"                
+[11] "poverty-link"                  "business-profiles"            
+[13] "business-search"               "box-map"                      
+[15] "races-graph"                   "sex-offenders"                
+[17] "recent-blog-posts"             "recent-forum-posts"           
+[19] "local-news"                    "city-quides"                  
+[21] "ancestries"                    "local-time"                   
+[23] "elevation"                     "direct-ad3"                   
+[25] "foreign-born-population"       "nearest-cities"               
+[27] "coordinates"                   "area-codes"                   
+[29] "household-income-value-graphs" "unemployment"                 
+[31] "most-common-industries"        "earthquakes"                  
+[33] "natural-disasters"             "airports"                     
+[35] "schools"                       "features-boundaries-map"      
+[37] "features-title"                "boundaries-map"               
+[39] "features"                      "radon"                        
+[41] "households-stats"              "group-quaters"                
+[43] "marital-info"                  "education-info"               
+[45] "education-graphs"              "presidential-elections"       
+[47] "political-contributions-link"  "religion"                     
+[49] "food-environment"              "radio-tv-stations"            
+[51] "accidents"                     "bridges"                      
+[53] "fcc-licenses"                  "heating-fuel-graph"           
+[55] "comparisons"                   "airman"                       
+[57] "business-photos"               "cost-of-living-calculator"    
+[59] "inventors"                    
+[48:47] 49> length(getNodeSet(da, "//section//table"))
+[1] 23
+[50:12] 50> 
