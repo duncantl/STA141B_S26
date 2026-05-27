@@ -50,11 +50,17 @@ city$Name = gsub(", CA$", "", city$Name)
 # Got get the 9th table and the links in the second column
 
 
-u = getNodeSet(cit, "//descendant::table[position() = 9]//tr//descendant::td[2]//@href")
-u = getNodeSet(cit, "((//table)[9]//tr//td[2])")
-u = getNodeSet(cit, "((//table)[9]//tr//td[2]//a/@href)")
+# Get the href in the second column of each row in the 9th table
+u1 = getNodeSet(cit, "//descendant::table[position() = 9]//tr//descendant::td[2]//@href")
+# same but with the XPath shorthand
+u2 = getNodeSet(cit, "((//table)[9]//tr//td[2]//a/@href)")
 
-u = unlist(u)
+# Get the second td in each row, just in case some rows didn't have an <a> in the second column
+u3= getNodeSet(cit, "((//table)[9]//tr//td[2])")
+# Get the 
+
+
+u = unlist(u2)
 ucs = getRelativeURL(u, uc)
 #errors
 # javascript:l("Acalanes-Ridge")
