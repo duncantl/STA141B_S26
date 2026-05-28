@@ -29,3 +29,15 @@ sids = unlist(getNodeSet(doc, "//section/@id"))
 + [code in cityData.R](../Day16/cityData.R)
 
 + [R session](Rsession)
+
+
++ 3 ways to explore the HTML structure to find the data we want
+   1. Inspect tool in browser
+   1. View the entire HTML for a Web page - View Page Source 
+   1. Read into R and explore with XPath expressions
+
+
+Example of 3.
+
+```
+```
