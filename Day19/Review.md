@@ -4,7 +4,7 @@
 
 +  Reading non-standard data
     + `strsplit()`
-	+ grouping - `split(, cumsum(condition))`
+	+ grouping lines/elements - `split(, cumsum(condition))`
 
 
 + Validating results
@@ -17,7 +17,9 @@
 	+ Finding elements, e.g., IP addresses
 	+ Special characters - `.`, `^`, `$`, `[]`, `()`
     + Quantifiers - `*`, `?`, `+`, `{m,}`, `{m,n}`, `{,n}`
-    + Character sets - `[:space:]`, `[:punct:]`, `[:digits:]`
+	+ Character sets - `[a-f]`, `[-,.]`, `[01[:space:]]`
+	+ Negated character sets - `[^iou]`
+    + Named Character sets - `[:space:]`, `[:punct:]`, `[:digits:]`
 	    + used in 
 
 + SQL
